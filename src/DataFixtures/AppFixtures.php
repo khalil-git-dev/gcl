@@ -31,7 +31,7 @@ class AppFixtures extends Fixture
         $manager->persist($role2);
 
         $role3 = new Role();
-        $role3->setLibelle('ELEVE');
+        $role3->setLibelle('USER');
         $manager->persist($role3);
     
         $supAdmin = new User();

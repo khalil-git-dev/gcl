@@ -37,9 +37,9 @@ class UserVoter extends Voter implements VoterInterface
                 // logic to determine if the user can EDIT
                 if(strtoupper($userConnect->getRoles()[0])==="ROLE_SUP_ADMIN"){
                     return true;
-                }else if(strtoupper($userConnect->getRoles()[0])==="ROLE_USER" || strtoupper($userConnect->getRoles()[0])==="ROLE_PROFESSEUR"){
+                }else if(strtoupper($userConnect->getRoles()[0])==="ROLE_USER" || strtoupper($userConnect->getRoles()[0])==="ROLE_FORMATEUR"){
                     return false;
-                }else if(strtoupper($userConnect->getRoles()[0])==="ROLE_PROVISEUR" && ($roleUserSubject === "PROFESSEUR" || $roleUserSubject === "USER")){
+                }else if(strtoupper($userConnect->getRoles()[0])==="ROLE_PROVISEUR" && ($roleUserSubject === "FORMATEUR" || $roleUserSubject === "USER")){
                     return true;
                 }
                               

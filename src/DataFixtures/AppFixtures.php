@@ -27,7 +27,7 @@ class AppFixtures extends Fixture
         $manager->persist($role1);
 
         $role2 = new Role();
-        $role2->setLibelle('PROFESSEUR');
+        $role2->setLibelle('FORMATEUR');
         $manager->persist($role2);
 
         $role3 = new Role();

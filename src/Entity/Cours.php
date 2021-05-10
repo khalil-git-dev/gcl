@@ -52,6 +52,11 @@ class Cours
      */
     private $classe;
 
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $dureeCr;
+
     public function __construct()
     {
         $this->classe = new ArrayCollection();
@@ -145,4 +150,17 @@ class Cours
 
         return $this;
     }
+
+    public function getDureeCr(): ?float
+    {
+        return $this->dureeCr;
+    }
+
+    public function setDureeCr(float $dureeCr): self
+    {
+        $this->dureeCr = $dureeCr;
+
+        return $this;
+    }
+
 }

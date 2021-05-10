@@ -59,6 +59,7 @@ class Date
      */
     private $factures;
 
+    
     public function __construct()
     {
         $this->evenements = new ArrayCollection();
@@ -66,6 +67,7 @@ class Date
         $this->evaluations = new ArrayCollection();
         $this->inscriptions = new ArrayCollection();
         $this->factures = new ArrayCollection();
+        $this->cours = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -258,4 +260,5 @@ class Date
 
         return $this;
     }
+
 }

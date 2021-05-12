@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\EvenementRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ORM\Entity(repositoryClass=EvenementRepository::class)
@@ -35,6 +36,7 @@ class Evenement
     /**
      * @ORM\ManyToOne(targetEntity=Date::class, inversedBy="evenements")
      * @ORM\JoinColumn(nullable=false)
+     * @MaxDepth(1)
      */
     private $date;
 

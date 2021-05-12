@@ -44,20 +44,20 @@ class User implements UserInterface
      */
     private $isActive;
 
-    /**
-     * @ORM\Column(type="string", length=50)
-     */
-    private $prenom;
+    // /**
+    //  * @ORM\Column(type="string", length=50)
+    //  */
+    // private $prenom;
 
-    /**
-     * @ORM\Column(type="string", length=30)
-     */
-    private $nom;
+    // /**
+    //  * @ORM\Column(type="string", length=30)
+    //  */
+    // private $nom;
 
-    /**
-     * @ORM\Column(type="string", length=15)
-     */
-    private $telephone;
+    // /**
+    //  * @ORM\Column(type="string", length=15)
+    //  */
+    // private $telephone;
 
     /**
      * @ORM\Column(type="date")

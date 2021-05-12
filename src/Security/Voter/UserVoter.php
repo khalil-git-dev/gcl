@@ -44,6 +44,7 @@ class UserVoter extends Voter implements VoterInterface
                 }
                               
                 break;
+                
             case 'POST_VIEW':
                 // logic to determine if the user can VIEW
                 if($userConnect->getRoles()[0]==="ROLE_USER"){
@@ -54,6 +55,9 @@ class UserVoter extends Voter implements VoterInterface
                 //     return true;
                 // } 
                 break;
+                
+            default:
+                return false;
         }
         return false;
     }

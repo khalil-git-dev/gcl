@@ -11,7 +11,9 @@ use App\Repository\CoursRepository;
 use App\Repository\DisciplineRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-
+    /**
+     * @Route("/api")
+     */
 class DisciplineController extends AbstractController
 {
     private $tokenStorage;
@@ -31,11 +33,10 @@ class DisciplineController extends AbstractController
     }
 
     /**
-     * @Route("/api/getProgressCours", name="getProgressCours", methods={"GET"})
+     * @Route("/getProgressCours", name="getProgressCours", methods={"GET"})
      */
-    public function getProgessCours(EntityManagerInterface $entityManager, DisciplineRepository $repo)
+    public function getProgressCours(EntityManagerInterface $entityManager, DisciplineRepository $repo)
     {
-        // $userCnt = $this->tokenStorage->getToken()->getUser();
         $disciplines = $repo->findAll();
         
         foreach($disciplines as $discip){

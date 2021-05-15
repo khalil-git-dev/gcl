@@ -253,6 +253,40 @@ class UserController extends AbstractController
         return new JsonResponse($data, 201);
     }
          
+     /**
+     * @Route("/activerDesactiverUser/{id}", name="activerDesactiverUser", methods={"PUT"})
+     */
+    public function activerDesactiverUser($id, EntityManagerInterface $entityManager)
+    {
+        $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
+        if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR")) {
+            $data = [
+                'status' => 401,
+                'message' => 'Vous n\'avez pas les droits pour efectuer cette operation'
+            ];
+            return new JsonResponse($data, 401);
+        }
+        $message = '';
+        $repoUser = $this->getDoctrine()->getRepository(User::class);
+        $user = $repoUser->find($id);
+        if($user->getIsActive()){
+            $user->setIsActive(0);
+            $entityManager->persist($user);
+            $message = 'desactivé';
+        }else{
+            $user->setIsActive(1);
+            $entityManager->persist($user);
+            $message = 'activé';
+        }
+        $entityManager->flush();
+
+       $data = [
+        'status' => 201,
+        'message' => "Utilisateur $message avec succes"
+    ];
+    return new JsonResponse($data, 201);
+    }
+
     // Genegation de password alternative pour la premiere connexion user
     public function passwordGenered($length)
     {

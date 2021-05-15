@@ -42,7 +42,6 @@ class UserVoter extends Voter implements VoterInterface
                 }else if(strtoupper($userConnect->getRoles()[0])==="ROLE_PROVISEUR" && ($roleUserSubject === "FORMATEUR" || $roleUserSubject === "USER")){
                     return true;
                 }
-                              
                 break;
                 
             case 'POST_VIEW':

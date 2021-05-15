@@ -38,7 +38,6 @@ class DisciplineController extends AbstractController
     public function getProgressCours(EntityManagerInterface $entityManager, DisciplineRepository $repo)
     {
         $disciplines = $repo->findAll();
-        
         foreach($disciplines as $discip){
             $totalCours = 0;
 
@@ -48,7 +47,6 @@ class DisciplineController extends AbstractController
                     $totalCours += $cr->getDureeCr();
                 }
             }
-
             $data[] = [
                 'id' => $discip->getId(),
                 'discipline' => $discip->getLibelleDis(),
@@ -60,5 +58,4 @@ class DisciplineController extends AbstractController
 
         return $this->json($data, 201);
     }
-
 }

@@ -141,6 +141,11 @@ class Eleve
      */
     private $dossiers;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="eleves")
+     */
+    private $user;
+
     public function __construct()
     {
         $this->evaluations = new ArrayCollection();
@@ -520,6 +525,18 @@ class Eleve
                 $dossier->setEleve(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

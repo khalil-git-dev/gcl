@@ -262,7 +262,7 @@ class UserController extends AbstractController
         if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR")) {
             $data = [
                 'status' => 401,
-                'message' => 'Vous n\'avez pas les droits pour efectuer cette operation'
+                'message' => 'Vous n\'avez pas les droits pour effectuer cette operation'
             ];
             return new JsonResponse($data, 401);
         }
@@ -284,7 +284,7 @@ class UserController extends AbstractController
         'status' => 201,
         'message' => "Utilisateur $message avec succes"
     ];
-    return new JsonResponse($data, 201);
+        return new JsonResponse($data, 201);
     }
 
     // Genegation de password alternative pour la premiere connexion user

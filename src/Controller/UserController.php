@@ -9,7 +9,6 @@ use App\Entity\Censeur;
 use App\Entity\Surveillant;
 use App\Entity\Intendant;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,16 +16,18 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-    /**
-     * @Route("/api")
-     */
+
+     
+    
 class UserController extends AbstractController
 {
     private $tokenStorage;
+    
     public function __construct(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
     }
+    
     
     /**
      * @Route("/ajoutUser", name="ajoutUser", methods={"POST"})
@@ -90,16 +91,16 @@ class UserController extends AbstractController
             
             $entityManager->persist($censeur);
 
-        }else if($libelle == "SURVEILLENT" || $libelle == "SURVEILLENT-GENERAL"){
-            $surveillent = new Surveillant();
-            $surveillent->setPrenomSur($values->prenom);
-            $surveillent->setNomSur($values->nom);
-            //$surveillent->setTelephoneSur($values->telephone);
-            $surveillent->setTypeSur($libelle);
-            $surveillent->setEmailSur($values->email);
-            $surveillent->setUser($user);
+        }else if($libelle == "surveillant" || $libelle == "surveillant-GENERAL"){
+            $surveillant = new Surveillant();
+            $surveillant->setPrenomSur($values->prenom);
+            $surveillant->setNomSur($values->nom);
+            //$surveillant->setTelephoneSur($values->telephone);
+            $surveillant->setTypeSur($libelle);
+            $surveillant->setEmailSur($values->email);
+            $surveillant->setUser($user);
             
-            $entityManager->persist($surveillent);
+            $entityManager->persist($surveillant);
         }
         $entityManager->flush();
 
@@ -166,6 +167,7 @@ class UserController extends AbstractController
         $formateur = $reposFormat->find($id);
         
                 #####   UpDate Censeur     #####
+            $censeur = new Censeur();
             $censeur->setPrenomCen($values->prenom);
             $censeur->setNomCen($values->nom);
             $censeur->setTelephone($values->telephone);
@@ -199,8 +201,10 @@ class UserController extends AbstractController
 
         $reposFormat = $this->getDoctrine()->getRepository(Intendant::class);
         $formateur = $reposFormat->find($id);
-        
+        $user = new User();
+
                 #####   UpDate Intendant     #####
+            $intendant = new Intendant();
             $intendant->setPrenomInt($values->prenom);
             $intendant->setNomInt($values->nom);
             $intendant->setTelephone($values->telephone);
@@ -237,13 +241,12 @@ class UserController extends AbstractController
         $formateur = $reposFormat->find($id);
         
                 #####   UpDate Surveillant     #####
-            $surveillent->setPrenomSur($values->prenom);
-            $surveillent->setNomSur($values->nom);
-            //$surveillent->setTelephoneSur($values->telephone);
-            $surveillent->setTypeSur($libelle);
-            $surveillent->setEmailSur($values->email);
-
-            $entityManager->persist($surveillent);
+            $surveillant = new Surveillant();
+            $surveillant->setPrenomSur($values->prenom);
+            $surveillant->setNomSur($values->nom);
+            //$surveillant->setTelephoneSur($values->telephone);
+            $surveillant->setEmailSur($values->email);
+            $entityManager->persist($surveillant);
             $entityManager->flush();
 
         $data = [
@@ -262,7 +265,7 @@ class UserController extends AbstractController
         if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR")) {
             $data = [
                 'status' => 401,
-                'message' => 'Vous n\'avez pas les droits pour efectuer cette operation'
+                'message' => 'Vous n\'avez pas les droits pour effectuer cette operation'
             ];
             return new JsonResponse($data, 401);
         }

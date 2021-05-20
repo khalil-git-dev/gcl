@@ -36,9 +36,6 @@ class AppFixtures extends Fixture
     
         $supAdmin = new User();
         $supAdmin->setUsername('supadmin@gmail.com');
-        $supAdmin->setPrenom('khalil');
-        $supAdmin->setNom('diop');
-        $supAdmin->setTelephone('777911628');
         $supAdmin->setRole($role);
         $supAdmin->setPassword($this->encoderpass->encodePassword($supAdmin, "supadmin"));
 

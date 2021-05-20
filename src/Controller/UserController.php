@@ -253,7 +253,7 @@ class UserController extends AbstractController
         return new JsonResponse($data, 201);
     }
          
-     /**
+    /**
      * @Route("/activerDesactiverUser/{id}", name="activerDesactiverUser", methods={"PUT"})
      */
     public function activerDesactiverUser($id, EntityManagerInterface $entityManager)
@@ -287,6 +287,8 @@ class UserController extends AbstractController
         return new JsonResponse($data, 201);
     }
 
+
+    
     // Genegation de password alternative pour la premiere connexion user
     public function passwordGenered($length)
     {

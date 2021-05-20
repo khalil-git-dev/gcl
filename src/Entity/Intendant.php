@@ -45,6 +45,11 @@ class Intendant
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $adresseInt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -106,6 +111,18 @@ class Intendant
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getAdresseInt(): ?string
+    {
+        return $this->adresseInt;
+    }
+
+    public function setAdresseInt(?string $adresseInt): self
+    {
+        $this->adresseInt = $adresseInt;
 
         return $this;
     }

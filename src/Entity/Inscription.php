@@ -66,6 +66,16 @@ class Inscription
      */
     private $factures;
 
+    /**
+     * @ORM\Column(type="string", length=20)
+     */
+    private $statusIns;
+
+    /**
+     * @ORM\Column(type="string", length=20)
+     */
+    private $numeroIns;
+
     public function __construct()
     {
         $this->activite = new ArrayCollection();
@@ -211,6 +221,30 @@ class Inscription
                 $facture->setInscription(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatusIns(): ?string
+    {
+        return $this->statusIns;
+    }
+
+    public function setStatusIns(string $statusIns): self
+    {
+        $this->statusIns = $statusIns;
+
+        return $this;
+    }
+
+    public function getNumeroIns(): ?string
+    {
+        return $this->numeroIns;
+    }
+
+    public function setNumeroIns(string $numeroIns): self
+    {
+        $this->numeroIns = $numeroIns;
 
         return $this;
     }

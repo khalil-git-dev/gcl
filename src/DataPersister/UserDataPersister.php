@@ -41,7 +41,7 @@ class UserDataPersister extends AbstractController implements DataPersisterInter
                 $data->eraseCredentials();
             }
         }
-        dd('pwd');
+        // dd('pwd');
         
         $this->entityManager->persist($data);
         $this->entityManager->flush();

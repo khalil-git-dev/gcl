@@ -14,8 +14,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-
-
 class ClasseController extends AbstractController
 {
 
@@ -24,7 +22,7 @@ class ClasseController extends AbstractController
         $this->usersRepository = $usersRepository;
     }
     
-     /**
+    /**
      * @Route("/api/list-class", name="classe" , methods={"GET"})
      */
     public function getClasse(ClasseRepository $classeManager)

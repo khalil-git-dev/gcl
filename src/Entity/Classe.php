@@ -203,7 +203,6 @@ class Classe
         if ($this->cours->removeElement($cour)) {
             $cour->removeClasse($this);
         }
-
         return $this;
     }
 

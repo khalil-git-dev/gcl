@@ -99,6 +99,7 @@ class InscriptionController extends AbstractController
         $eleve->setClasse($classeEl);
         $eleve->setNiveau($classeEl->getNiveau());
         $eleve->setUser($user);
+        $eleve->setUserParent($user2);
 
         $entityManager->persist($eleve);
         #####    DOSSIER  #####

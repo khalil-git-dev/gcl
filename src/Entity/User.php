@@ -82,6 +82,11 @@ class User implements UserInterface
      */
     private $eleves;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Eleve::class, mappedBy="userParent", orphanRemoval=true)
+     */
+    private $parents;
+
     public function __construct()
     {
         $this->isActive = true;
@@ -92,6 +97,7 @@ class User implements UserInterface
         $this->surveillants = new ArrayCollection();
         $this->formateurs = new ArrayCollection();
         $this->eleves = new ArrayCollection();
+        $this->parents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -371,6 +377,36 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($elefe->getUser() === $this) {
                 $elefe->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Eleve[]
+     */
+    public function getParents(): Collection
+    {
+        return $this->parents;
+    }
+
+    public function addParent(Eleve $parent): self
+    {
+        if (!$this->parents->contains($parent)) {
+            $this->parents[] = $parent;
+            $parent->setUserParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParent(Eleve $parent): self
+    {
+        if ($this->parents->removeElement($parent)) {
+            // set the owning side to null (unless already changed)
+            if ($parent->getUserParent() === $this) {
+                $parent->setUserParent(null);
             }
         }
 

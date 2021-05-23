@@ -15,6 +15,15 @@ class StatusController extends AbstractController
      */
     public function changeStatus($id, UserRepository $repoUser, EleveRepository $repoEleve)
     {
+        $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
+        if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR")) {
+            $data = [
+                'status' => 401,
+                'message' => 'Vous n\'avez pas les droits pour modifier'
+            ];
+            return new JsonResponse($data, 401);
+        }
+            
         $eleve = $repoEleve->find($id);
         $user = $repoUser->find($eleve->getUser()->getId());
         $parent = $repoUser->find($eleve->getUserParent()->getId());

@@ -23,14 +23,14 @@ class EleveController extends AbstractController
      */
     public function upDateEleve($id, Request $request, EntityManagerInterface $entityManager)
     {
-        // $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
-        // if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR")) {
-        //     $data = [
-        //         'status' => 401,
-        //         'message' => 'Vous n\'avez pas les droits pour modifier'
-        //     ];
-        //     return new JsonResponse($data, 401);
-        // }
+        $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
+        if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR")) {
+            $data = [
+                'status' => 401,
+                'message' => 'Vous n\'avez pas les droits pour modifier'
+            ];
+            return new JsonResponse($data, 401);
+        }
 
         $values = json_decode($request->getContent());
         $reposEleve = $this->getDoctrine()->getRepository(Eleve::class);

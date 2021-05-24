@@ -43,7 +43,7 @@ class Dossier
      * @ORM\OneToMany(targetEntity=Bulletin::class, mappedBy="dossier", orphanRemoval=true)
      */
     private $bulletins;
-
+    
     /**
      * @ORM\OneToMany(targetEntity=Inscription::class, mappedBy="dossier")
      */

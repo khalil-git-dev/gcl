@@ -36,9 +36,15 @@ class Niveau
      */
     private $eleves;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Classe::class, mappedBy="niveau")
+     */
+    private $classe;
+
     public function __construct()
     {
         $this->eleves = new ArrayCollection();
+        $this->classe = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -94,6 +100,36 @@ class Niveau
             // set the owning side to null (unless already changed)
             if ($elefe->getNiveau() === $this) {
                 $elefe->setNiveau(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Classe[]
+     */
+    public function getClasse(): Collection
+    {
+        return $this->classe;
+    }
+
+    public function addClasse(Classe $classe): self
+    {
+        if (!$this->classe->contains($classe)) {
+            $this->classe[] = $classe;
+            $classe->setNiveau($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClasse(Classe $classe): self
+    {
+        if ($this->classe->removeElement($classe)) {
+            // set the owning side to null (unless already changed)
+            if ($classe->getNiveau() === $this) {
+                $classe->setNiveau(null);
             }
         }
 

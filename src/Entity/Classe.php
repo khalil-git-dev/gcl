@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ApiResource()
@@ -57,6 +58,12 @@ class Classe
      * @ORM\ManyToMany(targetEntity=Cours::class, mappedBy="classe")
      */
     private $cours;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Niveau::class, inversedBy="classe")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $niveau;
 
     public function __construct()
     {
@@ -198,6 +205,17 @@ class Classe
         if ($this->cours->removeElement($cour)) {
             $cour->removeClasse($this);
         }
+        return $this;
+    }
+
+    public function getNiveau(): ?Niveau
+    {
+        return $this->niveau;
+    }
+
+    public function setNiveau(?Niveau $niveau): self
+    {
+        $this->niveau = $niveau;
 
         return $this;
     }

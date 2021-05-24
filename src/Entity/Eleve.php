@@ -154,6 +154,7 @@ class Eleve
 
     public function __construct()
     {
+        $this->etatEle = true;
         $this->evaluations = new ArrayCollection();
         $this->recus = new ArrayCollection();
         $this->bulletins = new ArrayCollection();

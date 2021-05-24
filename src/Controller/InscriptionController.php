@@ -35,14 +35,14 @@ class InscriptionController extends AbstractController
      */
     public function inscriptionEleve(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $userPasswordEncoder)
     {
-        // $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
-        // if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR" || $rolesUser == "ROLE_INTENDANT")) {
-        //     $data = [
-        //         'status' => 401,
-        //         'message' => 'Vous n\'avez pas les droits pour effectuer cette operation'
-        //     ];
-        //     return new JsonResponse($data, 401);
-        // }
+        $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
+        if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR" || $rolesUser == "ROLE_INTENDANT")) {
+            $data = [
+                'status' => 401,
+                'message' => 'Vous n\'avez pas les droits pour effectuer cette operation'
+            ];
+            return new JsonResponse($data, 401);
+        }
         $values = json_decode($request->getContent());
         
         $eleve = new Eleve();
@@ -59,13 +59,13 @@ class InscriptionController extends AbstractController
         #####    UTILISATEURS  #####
         // $pwdUser= $this->passwordGenered(9);
         // $pwdParent= $this->passwordGenered(9);
-        $user->setUsername(preg_replace('/\s+/', '', $values->nom. "." .$values->prenom)."@gmail.com");
+        $user->setUsername(strtolower(preg_replace('/\s+/', '', $values->nom. "." .$values->prenom))."@gmail.com");
         $user->setPassword($userPasswordEncoder->encodePassword($user, $values->nom));
         $reposRole1 = $this->getDoctrine()->getRepository(Role::class);
         $user->setRole($reposRole1->findOneByLibelle("USER"));
         $entityManager->persist($user);
 
-        $user2->setUsername(preg_replace('/\s+/', '', $values->nomTuteur)."@gmail.com");
+        $user2->setUsername(strtolower(preg_replace('/\s+/', '', $values->nomTuteur))."@gmail.com");
         $user2->setPassword($userPasswordEncoder->encodePassword($user2, $values->nom));
         $reposRole2 = $this->getDoctrine()->getRepository(Role::class);
         $user2->setRole($reposRole2->findOneByLibelle("PARENT"));
@@ -88,7 +88,6 @@ class InscriptionController extends AbstractController
         $eleve->setAdresseEle($values->adresse);
         $eleve->setReligionEle($values->religion);
         $eleve->setNationaliteElev($values->nationalite);
-        $eleve->setEtatEle($values->etat);
         $eleve->setDetailEle($values->detailEl);
         $eleve->setNomCompletPere($values->nomPere);
         $eleve->setNomCompletMere($values->nomMere);
@@ -102,7 +101,7 @@ class InscriptionController extends AbstractController
         $eleve->setUserParent($user2);
 
         $entityManager->persist($eleve);
-        #####    DOSSIER  #####
+        #####    DOSSIER   #####
         $dossier->setLibelleDos($values->libelleDos);
         $dossier->setTypeDos($values->typeDos);
         $dossier->setDetailDos($values->detailDos);

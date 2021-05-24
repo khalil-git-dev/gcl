@@ -23,16 +23,6 @@ class DisciplineController extends AbstractController
     }
 
     /**
-     * @Route("/discipline", name="discipline")
-     */
-    public function index(): Response
-    {
-        return $this->render('discipline/index.html.twig', [
-            'controller_name' => 'DisciplineController',
-        ]);
-    }
-
-    /**
      * @Route("/getAllDiscipline", name="getAllDiscipline", methods={"GET"})
      */
     public function getAllDiscipline(DisciplineRepository $repo)

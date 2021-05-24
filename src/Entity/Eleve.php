@@ -65,7 +65,7 @@ class Eleve
     private $nationaliteElev;
 
     /**
-     * @ORM\Column(type="string", length=15)
+     * @ORM\Column(type="boolean")
      */
     private $etatEle;
 
@@ -146,8 +146,15 @@ class Eleve
      */
     private $user;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="parents")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $userParent;
+
     public function __construct()
     {
+        $this->etatEle = true;
         $this->evaluations = new ArrayCollection();
         $this->recus = new ArrayCollection();
         $this->bulletins = new ArrayCollection();
@@ -537,6 +544,18 @@ class Eleve
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getUserParent(): ?User
+    {
+        return $this->userParent;
+    }
+
+    public function setUserParent(?User $userParent): self
+    {
+        $this->userParent = $userParent;
 
         return $this;
     }

@@ -7,6 +7,7 @@ use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Faker;
 
 class AppFixtures extends Fixture
 {
@@ -33,6 +34,26 @@ class AppFixtures extends Fixture
         $role3 = new Role();
         $role3->setLibelle('USER');
         $manager->persist($role3);
+
+        $role4 = new Role();
+        $role4->setLibelle('CENSEUR');
+        $manager->persist($role4);
+
+        $role5 = new Role();
+        $role5->setLibelle('INTENDANT');
+        $manager->persist($role5);
+
+        $role6 = new Role();
+        $role6->setLibelle('SURVEILLENT');
+        $manager->persist($role6);
+
+        $role7 = new Role();
+        $role7->setLibelle('SURVEILLENT-GENERAL');
+        $manager->persist($role7);
+
+        $role8 = new Role();
+        $role8->setLibelle('PARENT');
+        $manager->persist($role8);
     
         $role4 = new Role();
         $role4->setLibelle('SURVEILLANT');

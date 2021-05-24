@@ -40,6 +40,11 @@ class Reglement
      */
     private $recus;
 
+    /**
+     * @ORM\Column(type="string", length=15)
+     */
+    private $numeroReg;
+
     public function __construct()
     {
         $this->recus = new ArrayCollection();
@@ -112,6 +117,18 @@ class Reglement
                 $recu->setReglement(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNumeroReg(): ?string
+    {
+        return $this->numeroReg;
+    }
+
+    public function setNumeroReg(string $numeroReg): self
+    {
+        $this->numeroReg = $numeroReg;
 
         return $this;
     }

@@ -9,7 +9,6 @@ use App\Entity\Censeur;
 use App\Entity\Surveillant;
 use App\Entity\Intendant;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,12 +16,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-    /**
-     * @Route("/api")
-     */
+/**
+ * @Route("/api")
+ */
+
 class UserController extends AbstractController
 {
     private $tokenStorage;
+    
     public function __construct(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
@@ -90,6 +91,7 @@ class UserController extends AbstractController
             
             $entityManager->persist($censeur);
 
+<<<<<<< HEAD
         }else if($libelle == "SURVEILLANT" || $libelle == "SURVEILLANT-GENERAL"){
             $surveillent = new Surveillant();
             $surveillent->setPrenomSur($values->prenom);
@@ -98,8 +100,18 @@ class UserController extends AbstractController
             $surveillent->setTypeSur($libelle);
             $surveillent->setEmailSur($values->email);
             $surveillent->setUser($user);
+=======
+        }else if($libelle == "SURVEILLENT" || $libelle == "SURVEILLENT-GENERAL"){
+            $surveillant = new Surveillant();
+            $surveillant->setPrenomSur($values->prenom);
+            $surveillant->setNomSur($values->nom);
+            //$surveillant->setTelephoneSur($values->telephone);
+            $surveillant->setTypeSur($libelle);
+            $surveillant->setEmailSur($values->email);
+            $surveillant->setUser($user);
+>>>>>>> 6c6f8524e88450f1c105870fc6b79402d680cf8b
             
-            $entityManager->persist($surveillent);
+            $entityManager->persist($surveillant);
         }
         $entityManager->flush();
 
@@ -166,6 +178,7 @@ class UserController extends AbstractController
         $formateur = $reposFormat->find($id);
         
                 #####   UpDate Censeur     #####
+            $censeur = new Censeur();
             $censeur->setPrenomCen($values->prenom);
             $censeur->setNomCen($values->nom);
             $censeur->setTelephone($values->telephone);
@@ -199,8 +212,10 @@ class UserController extends AbstractController
 
         $reposFormat = $this->getDoctrine()->getRepository(Intendant::class);
         $formateur = $reposFormat->find($id);
-        
+        $user = new User();
+
                 #####   UpDate Intendant     #####
+            $intendant = new Intendant();
             $intendant->setPrenomInt($values->prenom);
             $intendant->setNomInt($values->nom);
             $intendant->setTelephone($values->telephone);
@@ -237,13 +252,12 @@ class UserController extends AbstractController
         $formateur = $reposFormat->find($id);
         
                 #####   UpDate Surveillant     #####
-            $surveillent->setPrenomSur($values->prenom);
-            $surveillent->setNomSur($values->nom);
-            //$surveillent->setTelephoneSur($values->telephone);
-            $surveillent->setTypeSur($libelle);
-            $surveillent->setEmailSur($values->email);
-
-            $entityManager->persist($surveillent);
+            $surveillant = new Surveillant();
+            $surveillant->setPrenomSur($values->prenom);
+            $surveillant->setNomSur($values->nom);
+            //$surveillant->setTelephoneSur($values->telephone);
+            $surveillant->setEmailSur($values->email);
+            $entityManager->persist($surveillant);
             $entityManager->flush();
 
         $data = [
@@ -253,7 +267,7 @@ class UserController extends AbstractController
         return new JsonResponse($data, 201);
     }
          
-     /**
+    /**
      * @Route("/activerDesactiverUser/{id}", name="activerDesactiverUser", methods={"PUT"})
      */
     public function activerDesactiverUser($id, EntityManagerInterface $entityManager)
@@ -287,6 +301,8 @@ class UserController extends AbstractController
         return new JsonResponse($data, 201);
     }
 
+
+    
     // Genegation de password alternative pour la premiere connexion user
     public function passwordGenered($length)
     {

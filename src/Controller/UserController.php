@@ -90,7 +90,7 @@ class UserController extends AbstractController
             
             $entityManager->persist($censeur);
 
-        }else if($libelle == "SURVEILLENT" || $libelle == "SURVEILLENT-GENERAL"){
+        }else if($libelle == "SURVEILLANT" || $libelle == "SURVEILLANT-GENERAL"){
             $surveillent = new Surveillant();
             $surveillent->setPrenomSur($values->prenom);
             $surveillent->setNomSur($values->nom);

@@ -35,12 +35,12 @@ class AppFixtures extends Fixture
         $manager->persist($role3);
     
         $supAdmin = new User();
-        $supAdmin->setUsername('supadmin@gmail.com');
-        $supAdmin->setPrenom('khalil');
-        $supAdmin->setNom('diop');
-        $supAdmin->setTelephone('777911628');
+        $supAdmin->setUsername('lofatou@gmail.com');
+        $supAdmin->setPrenom('fatou');
+        $supAdmin->setNom('lo');
+        $supAdmin->setTelephone('771617316');
         $supAdmin->setRole($role);
-        $supAdmin->setPassword($this->encoderpass->encodePassword($supAdmin, "supadmin"));
+        $supAdmin->setPassword($this->encoderpass->encodePassword($supAdmin, "1234"));
 
         $manager->persist($supAdmin);
         $manager->flush();

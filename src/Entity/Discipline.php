@@ -41,6 +41,11 @@ class Discipline
      */
     private $evaluations;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $quantumHoraire;
+
     public function __construct()
     {
         $this->cours = new ArrayCollection();
@@ -132,6 +137,18 @@ class Discipline
                 $evaluation->setDiscipline(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getQuantumHoraire(): ?int
+    {
+        return $this->quantumHoraire;
+    }
+
+    public function setQuantumHoraire(int $quantumHoraire): self
+    {
+        $this->quantumHoraire = $quantumHoraire;
 
         return $this;
     }

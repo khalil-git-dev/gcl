@@ -37,10 +37,8 @@ class ListerEleveController extends AbstractController
         $listE=$repos->findAll();
         $data=[];
         $i=0;
-        if ($roleUser->getRoles()===['ROLE_SUP_ADMIN']) {
-            foreach($listC as $lis){
-
-            
+        if ($roleUser->getRoles()===['ROLE_SURVEILLENT']||$roleUser->getRoles()===['ROLE_INTENDANT']) {
+            foreach($listC as $lis){   
             if ($lis->getId()) {
                 foreach ($listE as $listes) {
                  $data[$i]=$listes;

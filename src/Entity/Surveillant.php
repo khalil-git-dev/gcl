@@ -46,6 +46,12 @@ class Surveillant
      */
     private $classe;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="surveillants")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
     public function __construct()
     {
         $this->classe = new ArrayCollection();
@@ -124,6 +130,18 @@ class Surveillant
     public function removeClasse(Classe $classe): self
     {
         $this->classe->removeElement($classe);
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

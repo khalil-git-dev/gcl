@@ -10,6 +10,8 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use App\Repository\ActiviteRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 /**
  * @Route("/api", name="api_")
  */
@@ -22,7 +24,7 @@ class ActiviteController extends AbstractController
     public function liste(ActiviteRepository $activiterepo)
     {
         // On récupère la liste des articles
-    $activite = $activiterepo->findAll();
+    $activite = $activiterepo->apiFindAll();
 
     // On spécifie qu'on utilise l'encodeur JSON
     $encoders = [new JsonEncoder()];
@@ -54,11 +56,16 @@ class ActiviteController extends AbstractController
     /**
  * @Route("/activiter/ajout", name="ajout", methods={"POST"})
  */
-public function addActiviter(Request $request)
+public function addActiviter(Request $request, EntityManagerInterface $entityManager) 
 {
-    // On vérifie si la requête est une requête Ajax
-    if($request->isXmlHttpRequest()) {
-        // On instancie un nouvel article
+    $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
+        if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR" || $rolesUser == "ROLE_INTENDANT")) {
+            $data = [
+                'status' => 401,
+                'message' => 'Vous n\'avez pas les droits pour effectuer cette operation'
+            ];
+            return new JsonResponse($data, 401);
+        }
         $activiter = new Activite();
 
         // On décode les données envoyées
@@ -66,8 +73,8 @@ public function addActiviter(Request $request)
 
         // On hydrate l'objet
          $activiter->setLibelleAct($donnees->libelleAct);
-         $activiter->setNatureAct($donnees->$natureAct);
-         $activiter->setTypeAct($donnees->$typeAct);
+         $activiter->setNatureAct($donnees->natureAct);
+         $activiter->setTypeAct($donnees->typeAct);
         //  $user = $this->getDoctrine()->getRepository(Users::class)->findOneBy(["id" => 1]);
         //  $activiter->setUsers($user);
 
@@ -78,8 +85,53 @@ public function addActiviter(Request $request)
 
         // On retourne la confirmation
         return new Response('ok', 201);
-    }
+    //}
     return new Response('Failed', 404);
 }
+/**
+ * @Route("/activiter/editer/{id}", name="edit", methods={"PUT"})
+ */
+public function editActiviter($id , Request $request ,EntityManagerInterface $entityManager) 
+{
+        // On décode les données envoyées
+        $donnees = json_decode($request->getContent());
+        $reposActiviter = $this->getDoctrine()->getRepository(Activite::class);
+        $Activiter = $reposActiviter->find($id);
+
+        
+        // On hydrate l'objet
+        $Activiter->setLibelleAct($donnees->libelleAct);
+        $Activiter->setNatureAct($donnees->natureAct);
+        $Activiter->setTypeAct($donnees->typeAct);
+        // $user = $this->getDoctrine()->getRepository(Users::class)->find(1);
+        // $article->setUsers($user);
+
+        // On sauvegarde en base
+        //$entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($Activiter);
+        $entityManager->flush();
+
+        // On retourne la confirmation
+        return new Response('ok', $code);
+    }
+/**
+ * @Route("/activiter_supprimer/{id}", name="supprime", methods={"DELETE"})
+ */
+public function removeArticle($id , Request $request ,EntityManagerInterface $entityManager)
+{
+    
+     // On décode les données envoyées
+     $donnees = json_decode($request->getContent());
+     $reposActiviter = $this->getDoctrine()->getRepository(Activite::class);
+     $Activiter = $reposActiviter->find($id);
+
+    
+    
+    $entityManager = $this->getDoctrine()->getManager();
+    $entityManager->remove($Activiter);
+    $entityManager->flush();
+    return new Response('ok');
+}
+
 
 }

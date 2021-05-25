@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-
 use App\Entity\User;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;

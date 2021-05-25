@@ -2,12 +2,19 @@
 
 namespace App\Entity;
 
-use App\Repository\EleveRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\EleveRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
+ * @ApiResource(
+ * collectionOperations={
+ *    "get"},
+ *   normalizationContext={"groups"={"eleve"}},))
+ * 
  * @ORM\Entity(repositoryClass=EleveRepository::class)
  */
 class Eleve
@@ -16,26 +23,31 @@ class Eleve
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * 
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=15)
+     *  @Groups({"eleve"})
      */
     private $nomEle;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups({"eleve"})
      */
     private $prenomEle;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"eleve"})
      */
     private $dateNaissEle;
 
     /**
      * @ORM\Column(type="string", length=30)
+     * @Groups({"eleve"})
      */
     private $lieuNaissEle;
 
@@ -113,6 +125,7 @@ class Eleve
     /**
      * @ORM\ManyToOne(targetEntity=Classe::class, inversedBy="eleve")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"classe"})
      */
     private $classe;
 

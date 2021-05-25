@@ -26,33 +26,33 @@ class ListerEleveController extends AbstractController
     /**
      * @Route("/lister/eleve", name="lister_eleve", methods={"GET"})
      */
-    public function listerParClass(ClasseRepository $repoC,EleveRepository $repoE,SerializerInterface $serializer)
+    public function listerParClass()
     {
         $roleUser=$this->tokenStorage->getToken()->getUser();
         // recuperer class
-        $Repo=$this->getDoctrine()->getRepository(Classe::class);
-        $listC=$Repo->findAll();
           //recuperer list elve
-        $repos = $this->getDoctrine()->getRepository(Eleve::class);
-        $listE=$repos->findAll();
+          $RepoCl=$this->getDoctrine()->getRepository(Classe::class);
+          $classes=$RepoCl->findAll();
         $data=[];
         $i=0;
         if ($roleUser->getRoles()===['ROLE_SURVEILLENT']||$roleUser->getRoles()===['ROLE_INTENDANT']) {
-            foreach($listC as $lis){   
-            if ($lis->getId()) {
-                foreach ($listE as $listes) {
-                 $data[$i]=$listes;
-                 $i++;
-                }
-                return $this->json($data, 200);
-         
-            }
-        }
-        }
+            foreach($classes as $class){ 
+                 $eleves=$class->getEleve();
+                    $data[]=[
 
+                        'id'=>$class->getId(),
+                        'libelle'=>$class->getLibelleCl(),
+                         'eleve'=>$class->getEleve(),       
+                               
+                    ];     
+                            
+               // dd($class); 
+            }
+            return $this->json($data, 200);          
+        }   
         $data = [
             'status' => 400,
-            'message' => 'impossible  '
+            'message' => 'impossible de voir cette listes  '
             ];
             return new JsonResponse($data, 400);
     }

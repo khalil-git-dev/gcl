@@ -23,6 +23,14 @@ class ActiviteController extends AbstractController
      */
     public function liste(ActiviteRepository $activiterepo)
     {
+        $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
+        if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR" || $rolesUser == "ROLE_INTENDANT")) {
+            $data = [
+                'status' => 401,
+                'message' => 'Vous n\'avez pas les droits pour effectuer cette operation'
+            ];
+            return new JsonResponse($data, 401);
+        }
         // On récupère la liste des articles
     $activite = $activiterepo->apiFindAll();
 
@@ -75,11 +83,10 @@ public function addActiviter(Request $request, EntityManagerInterface $entityMan
          $activiter->setLibelleAct($donnees->libelleAct);
          $activiter->setNatureAct($donnees->natureAct);
          $activiter->setTypeAct($donnees->typeAct);
-        //  $user = $this->getDoctrine()->getRepository(Users::class)->findOneBy(["id" => 1]);
-        //  $activiter->setUsers($user);
+        
 
         // On sauvegarde en base
-        //$entityManager = $this->getDoctrine()->getManager();
+        
         $entityManager->persist($activiter);
         $entityManager->flush();
 
@@ -93,6 +100,14 @@ public function addActiviter(Request $request, EntityManagerInterface $entityMan
  */
 public function editActiviter($id , Request $request ,EntityManagerInterface $entityManager) 
 {
+    $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
+    if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR" || $rolesUser == "ROLE_INTENDANT")) {
+        $data = [
+            'status' => 401,
+            'message' => 'Vous n\'avez pas les droits pour effectuer cette operation'
+        ];
+        return new JsonResponse($data, 401);
+    }
         // On décode les données envoyées
         $donnees = json_decode($request->getContent());
         $reposActiviter = $this->getDoctrine()->getRepository(Activite::class);
@@ -120,7 +135,15 @@ public function editActiviter($id , Request $request ,EntityManagerInterface $en
 public function removeArticle($id , Request $request ,EntityManagerInterface $entityManager)
 {
     
-     // On décode les données envoyées
+     
+    $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
+    if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR" || $rolesUser == "ROLE_INTENDANT")) {
+        $data = [
+            'status' => 401,
+            'message' => 'Vous n\'avez pas les droits pour effectuer cette operation'
+        ];
+        return new JsonResponse($data, 401);
+    }// On décode les données envoyées
      $donnees = json_decode($request->getContent());
      $reposActiviter = $this->getDoctrine()->getRepository(Activite::class);
      $Activiter = $reposActiviter->find($id);

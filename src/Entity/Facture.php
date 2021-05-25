@@ -56,6 +56,11 @@ class Facture
      */
     private $reglements;
 
+    /**
+     * @ORM\Column(type="string", length=15)
+     */
+    private $numeroFac;
+
     public function __construct()
     {
         $this->reglements = new ArrayCollection();
@@ -164,6 +169,18 @@ class Facture
                 $reglement->setFacture(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNumeroFac(): ?string
+    {
+        return $this->numeroFac;
+    }
+
+    public function setNumeroFac(string $numeroFac): self
+    {
+        $this->numeroFac = $numeroFac;
 
         return $this;
     }

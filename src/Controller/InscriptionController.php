@@ -109,12 +109,18 @@ class InscriptionController extends AbstractController
 
         $entityManager->persist($dossier);
         #####    ACTIVITE  #####
-        $activite->setLibelleAct($values->libelleActiv);
-        $activite->setNatureAct($values->natureActiv);
-        $activite->setTypeAct($values->typeActiv);
-        $activite->setMontant($values->montant);
-
-        $entityManager->persist($activite);
+        foreach($values->activites as $key => $val)
+        {
+            $activite = new Activite();
+            $activite->setLibelleAct($val->libelleActiv);
+            $activite->setNatureAct($val->natureActiv);
+            $activite->setTypeAct($val->typeActiv);
+            $activite->setMontant($val->montant);
+            
+            $entityManager->persist($activite);
+            $inscription->addActivite($activite);
+        }
+        
         #####    INSCRIPTION  #####
         $inscription->setNumeroIns($NumInscription);
         $inscription->setLibelleIns($values->libelleIns);
@@ -125,15 +131,14 @@ class InscriptionController extends AbstractController
         $inscription->setDate($date);
         $inscription->setStatusIns("En cours");
         $inscription->setDossier($dossier);
-        $inscription->addActivite($activite);
-
+        // $inscription->addActivite($activite);
         $entityManager->persist($inscription);
         
         $entityManager->flush();
 
         $data = [
             'status' => 201,
-            'message' => "Une(e) Nouveau(lle) élève inscrit, consulter votre email pour vos informations de connexion."
+            'message' => "Un(e) Nouveau(lle) élève inscrit, consulter votre email pour vos informations de connexion."
         ];
         return new JsonResponse($data, 201); 
     }

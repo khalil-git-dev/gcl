@@ -5,14 +5,10 @@ namespace App\Controller;
 use App\Entity\Eleve;
 use App\Entity\Classe;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-
 /**
  * @Route("/api")
  */
@@ -70,4 +66,7 @@ class EleveController extends AbstractController
         ];
         return new JsonResponse($data, 201); 
     }
+
+    
+
 }

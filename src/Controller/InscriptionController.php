@@ -15,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -62,13 +61,13 @@ class InscriptionController extends AbstractController
         $user->setUsername(strtolower(preg_replace('/\s+/', '', $values->nom. "." .$values->prenom))."@gmail.com");
         $user->setPassword($userPasswordEncoder->encodePassword($user, $values->nom));
         $reposRole1 = $this->getDoctrine()->getRepository(Role::class);
-        $user->setRole($reposRole1->findOneByLibelle("USER"));
+        $user->setRole($reposRole1->findOneBy(array('libelle' => "USER")));
         $entityManager->persist($user);
 
         $user2->setUsername(strtolower(preg_replace('/\s+/', '', $values->nomTuteur))."@gmail.com");
         $user2->setPassword($userPasswordEncoder->encodePassword($user2, $values->nom));
         $reposRole2 = $this->getDoctrine()->getRepository(Role::class);
-        $user2->setRole($reposRole2->findOneByLibelle("PARENT"));
+        $user2->setRole($reposRole2->findOneBy(array('libelle' => "PARENT")));
         $entityManager->persist($user2);
 
         $classeRole = $this->getDoctrine()->getRepository(Classe::class);
@@ -113,6 +112,7 @@ class InscriptionController extends AbstractController
         $activite->setLibelleAct($values->libelleActiv);
         $activite->setNatureAct($values->natureActiv);
         $activite->setTypeAct($values->typeActiv);
+        $activite->setMontant($values->montant);
 
         $entityManager->persist($activite);
         #####    INSCRIPTION  #####

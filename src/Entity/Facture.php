@@ -30,16 +30,6 @@ class Facture
     private $articleFac;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $quantiteFac;
-
-    /**
-     * @ORM\Column(type="float")
-     */
-    private $puFac;
-
-    /**
      * @ORM\Column(type="float")
      */
     private $montantFac;
@@ -96,30 +86,6 @@ class Facture
     public function setArticleFac(string $articleFac): self
     {
         $this->articleFac = $articleFac;
-
-        return $this;
-    }
-
-    public function getQuantiteFac(): ?float
-    {
-        return $this->quantiteFac;
-    }
-
-    public function setQuantiteFac(?float $quantiteFac): self
-    {
-        $this->quantiteFac = $quantiteFac;
-
-        return $this;
-    }
-
-    public function getPuFac(): ?float
-    {
-        return $this->puFac;
-    }
-
-    public function setPuFac(float $puFac): self
-    {
-        $this->puFac = $puFac;
 
         return $this;
     }

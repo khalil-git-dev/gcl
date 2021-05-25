@@ -36,7 +36,7 @@ security:
         api:
             pattern:  ^/api
             stateless: true
-            provider: app_user_provider
+            provider: entity_provider
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator

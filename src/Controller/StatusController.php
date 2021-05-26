@@ -22,8 +22,7 @@ class StatusController extends AbstractController
                 'message' => 'Vous n\'avez pas les droits pour modifier'
             ];
             return new JsonResponse($data, 401);
-        }
-            
+        }         
         $eleve = $repoEleve->find($id);
         $user = $repoUser->find($eleve->getUser()->getId());
         $parent = $repoUser->find($eleve->getUserParent()->getId());

@@ -138,7 +138,6 @@ class InscriptionController extends AbstractController
         return new JsonResponse($data, 201); 
     }
 
-
     public function getLastInscription(){
         $ripo = $this->getDoctrine()->getRepository(Inscription::class);
         $compte = $ripo->findBy([], ['id'=>'DESC']);

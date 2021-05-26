@@ -23,7 +23,7 @@ class ActiviteRepository extends ServiceEntityRepository
      * @return Activite[] Returns an array of Activite objects
      */
     public function apiFindAll() : array
-{
+    {
     $qb = $this->createQueryBuilder('a')
         ->select('a.id', 'a.libelleAct', 'a.natureAct', 'a.typeAct')
         ->orderBy('a.id', 'ASC');
@@ -31,7 +31,7 @@ class ActiviteRepository extends ServiceEntityRepository
     $query = $qb->getQuery();
 
     return $query->execute();
-}
+    }
 
 
 

@@ -24,7 +24,7 @@ class FactureController extends AbstractController
     }
     
     /**
-     * @Route("/creationFactureEleve", name="creationFactureEleve", methods={"POST"} )
+     * @Route("/creationFactureEleve", name="creationFactureEleve", methods={"POST"})
      */
     public function creationFactureEleve(Request $request, EntityManagerInterface $entityManager)
     {
@@ -60,7 +60,6 @@ class FactureController extends AbstractController
             $article = $article.$activite->getLibelleAct()." ";
             $montants += $activite->getMontant();
         }
-        //dd($NumFacture);
         $facture->setNumeroFac($NumFacture);
         $facture->setTypeFac('Preformat');
         $facture->setLibelleFac("Facture de ".$inscription->getLibelleIns());

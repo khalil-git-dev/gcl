@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-<<<<<<< HEAD
 use App\Entity\Role;
 use App\Entity\User;
 use App\Entity\Serie;
@@ -16,21 +15,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-=======
-
-use App\Entity\User;
-use App\Repository\RoleRepository;
-use App\Repository\UserRepository;
-use App\Repository\ClasseRepository;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
->>>>>>> 6c6f8524e88450f1c105870fc6b79402d680cf8b
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-<<<<<<< HEAD
     /**
      * @Route("/api")
      */
@@ -121,34 +109,3 @@ class ClasseController extends AbstractController
         // $entityManager->persist($surveillant);
 
         // $entityManager->flush();
-=======
-class ClasseController extends AbstractController
-{
-
-    public function __construct(UserRepository $usersRepository)
-    {
-        $this->usersRepository = $usersRepository;
-    }
-    
-    /**
-     * @Route("/api/list-class", name="classe" , methods={"GET"})
-     */
-    public function getClasse(ClasseRepository $classeManager)
-    {
-        $classe = $classeManager->findAll();
-        foreach($classe as $classes){
-            $data[] = [
-                'libelleCl' => $classes->getLibelleCl(),
-                'descriptionCl' => $classes->getDescriptionCl(),
-                'id' => $classes->getId(),
-                'nbMaxEleve' => $classes->getNbMaxEleve(),
-                'serie' => $classes->getSerie()->getLibelleSer()
-            ];
-        }
-
-        return $this->json($data, 201); 
-    }
-
-}
-
->>>>>>> 6c6f8524e88450f1c105870fc6b79402d680cf8b

@@ -55,18 +55,6 @@ class AppFixtures extends Fixture
         $role8->setLibelle('PARENT');
         $manager->persist($role8);
     
-        $role4 = new Role();
-        $role4->setLibelle('SURVEILLANT');
-        $manager->persist($role4);
-
-        $role5 = new Role();
-        $role5->setLibelle('INTENDANT');
-        $manager->persist($role5);
-
-        $role6 = new Role();
-        $role6->setLibelle('CENSEUR');
-        $manager->persist($role6);
-        
         $supAdmin = new User();
         $supAdmin->setUsername('supadmin@gmail.com');
         $supAdmin->setRole($role);

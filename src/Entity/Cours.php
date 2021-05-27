@@ -57,6 +57,11 @@ class Cours
      */
     private $dureeCr;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Date::class, inversedBy="cours")
+     */
+    private $dateCours;
+
     public function __construct()
     {
         $this->classe = new ArrayCollection();
@@ -159,6 +164,18 @@ class Cours
     public function setDureeCr(float $dureeCr): self
     {
         $this->dureeCr = $dureeCr;
+
+        return $this;
+    }
+
+    public function getDateCours(): ?Date
+    {
+        return $this->dateCours;
+    }
+
+    public function setDateCours(?Date $dateCours): self
+    {
+        $this->dateCours = $dateCours;
 
         return $this;
     }

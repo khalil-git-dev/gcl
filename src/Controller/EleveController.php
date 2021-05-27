@@ -112,6 +112,6 @@ class EleveController extends AbstractController
         return new JsonResponse($data, 201);
     }
 
-
+    
 
 }

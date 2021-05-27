@@ -2,32 +2,36 @@
 
 namespace App\Controller;
 
-use App\Entity\Activite;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\AgentSoins;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
-use App\Repository\ActiviteRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use App\Repository\AgentSoinsRepository;
+use App\Entity\ServiceMedicale;
+
 /**
  * @Route("/api", name="api_")
  */
 
-class ActiviteController extends AbstractController
+class AgantController extends AbstractController
 {
+   
     private $tokenStorage;
     public function __construct(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
     }
-    /**
-     * @Route("/activite", name="activite"),methods={"GET"})
+    
+   /**
+     * @Route("/Agant_soin", name="activite"),methods={"GET"})
      */
-    public function liste(ActiviteRepository $activiterepo)
+    public function liste(AgentSoinsRepository $agantrepo)
     {
         $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
         if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR" || $rolesUser == "ROLE_INTENDANT")) {
@@ -38,7 +42,7 @@ class ActiviteController extends AbstractController
             return new JsonResponse($data, 401);
         }
         // On récupère la liste des articles
-    $activite = $activiterepo->apiFindAll();
+    $agant = $agantrepo->FindAll();
 
     // On spécifie qu'on utilise l'encodeur JSON
     $encoders = [new JsonEncoder()];
@@ -50,7 +54,7 @@ class ActiviteController extends AbstractController
     $serializer = new Serializer($normalizers, $encoders);
 
     // On convertit en json
-    $jsonContent = $serializer->serialize($activite, 'json', [
+    $jsonContent = $serializer->serialize($agant, 'json', [
         'circular_reference_handler' => function ($object) {
             return $object->getId();
         }
@@ -67,11 +71,12 @@ class ActiviteController extends AbstractController
 
         
     }
-    /**
- * @Route("/activiter/ajout", name="ajout", methods={"POST"})
+     /**
+ * @Route("/agant_ajout", name="ajout",methods={"POST"})
  */
-public function addActiviter(Request $request, EntityManagerInterface $entityManager) 
+public function addAgant(Request $request, EntityManagerInterface $entityManager) 
 {
+
     $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
         if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR" || $rolesUser == "ROLE_INTENDANT")) {
             $data = [
@@ -80,21 +85,27 @@ public function addActiviter(Request $request, EntityManagerInterface $entityMan
             ];
             return new JsonResponse($data, 401);
         }
-        $activiter = new Activite();
+
+        
+        
+
+        $agant = new AgentSoins();
 
         // On décode les données envoyées
         $donnees = json_decode($request->getContent());
+        $post = $this->getDoctrine()->getRepository(ServiceMedicale::class);
+        $compte = $post->find($donnees->id);
+
 
         // On hydrate l'objet
-         $activiter->setLibelleAct($donnees->libelleAct);
-         $activiter->setNatureAct($donnees->natureAct);
-         $activiter->setTypeAct($donnees->typeAct);
-         $activiter->setMontant($donnees->montant);
+         $agant->setNomCompletAgent($donnees->nomCompletAgent);
+         $agant->setServiceMed($compte);
+         
         
 
         // On sauvegarde en base
         
-        $entityManager->persist($activiter);
+        $entityManager->persist($agant);
         $entityManager->flush();
 
         // On retourne la confirmation
@@ -103,9 +114,10 @@ public function addActiviter(Request $request, EntityManagerInterface $entityMan
     return new Response('Failed', 404);
 }
 /**
- * @Route("/activiter/editer/{id}", name="edit", methods={"PUT"})
+ * @Route("/agant_modifier/{id}", name="edit", methods={"PUT"})
  */
-public function editActiviter($id , Request $request ,EntityManagerInterface $entityManager) 
+
+public function editagant ($id , Request $request ,EntityManagerInterface $entityManager) 
 {
     $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
     if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR" || $rolesUser == "ROLE_INTENDANT")) {
@@ -117,52 +129,25 @@ public function editActiviter($id , Request $request ,EntityManagerInterface $en
     }
         // On décode les données envoyées
         $donnees = json_decode($request->getContent());
-        $reposActiviter = $this->getDoctrine()->getRepository(Activite::class);
-        $Activiter = $reposActiviter->find($id);
+        $reposAgant = $this->getDoctrine()->getRepository(AgentSoins::class);
+        $agant = $reposAgant->find($id);
+        $post = $this->getDoctrine()->getRepository(ServiceMedicale::class);
+        $compte = $post->find($donnees->id);
 
         
         // On hydrate l'objet
-        $Activiter->setLibelleAct($donnees->libelleAct);
-        $Activiter->setNatureAct($donnees->natureAct);
-        $Activiter->setTypeAct($donnees->typeAct);
-        $Activiter->setMontant($donnees->montant);
+        $agant->setNomCompletAgent($donnees->nomCompletAgent);
+         $agant->setServiceMed($compte);
         // $user = $this->getDoctrine()->getRepository(Users::class)->find(1);
         // $article->setUsers($user);
 
         // On sauvegarde en base
         //$entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($Activiter);
+        $entityManager->persist($agant);
         $entityManager->flush();
 
         // On retourne la confirmation
         return new Response('ok');
     }
-/**
- * @Route("/activiter_supprimer/{id}", name="supprime", methods={"DELETE"})
- */
-public function removeArticle($id , Request $request ,EntityManagerInterface $entityManager)
-{
     
-     
-    $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
-    if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR" || $rolesUser == "ROLE_INTENDANT")) {
-        $data = [
-            'status' => 401,
-            'message' => 'Vous n\'avez pas les droits pour effectuer cette operation'
-        ];
-        return new JsonResponse($data, 401);
-    }// On décode les données envoyées
-     $donnees = json_decode($request->getContent());
-     $reposActiviter = $this->getDoctrine()->getRepository(Activite::class);
-     $Activiter = $reposActiviter->find($id);
-
-    
-    
-    $entityManager = $this->getDoctrine()->getManager();
-    $entityManager->remove($Activiter);
-    $entityManager->flush();
-    return new Response('ok');
-}
-
-
 }

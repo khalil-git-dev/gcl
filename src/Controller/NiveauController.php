@@ -24,7 +24,7 @@ class NiveauController extends AbstractController
     /**
      * @Route("/listeEleveParNiveau", name="listeEleveParNiveau", methods={"GET"})
      */
-    public function listeEleveParNiveau(Request $request, EntityManagerInterface $entityManager)
+    public function listeEleveParNiveau()
     {
         $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
         if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR")) {

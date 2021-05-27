@@ -30,6 +30,16 @@ class AgentSoins
      */
     private $serviceMed;
 
+    /**
+     * @ORM\Column(type="string", length=30)
+     */
+    private $typeAgt;
+
+    /**
+     * @ORM\Column(type="string", length=15)
+     */
+    private $telephoneAgt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -55,6 +65,30 @@ class AgentSoins
     public function setServiceMed(?ServiceMedicale $serviceMed): self
     {
         $this->serviceMed = $serviceMed;
+
+        return $this;
+    }
+
+    public function getTypeAgt(): ?string
+    {
+        return $this->typeAgt;
+    }
+
+    public function setTypeAgt(string $typeAgt): self
+    {
+        $this->typeAgt = $typeAgt;
+
+        return $this;
+    }
+
+    public function getTelephoneAgt(): ?string
+    {
+        return $this->telephoneAgt;
+    }
+
+    public function setTelephoneAgt(string $telephoneAgt): self
+    {
+        $this->telephoneAgt = $telephoneAgt;
 
         return $this;
     }

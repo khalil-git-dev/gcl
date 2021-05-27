@@ -153,5 +153,6 @@ class InscriptionController extends AbstractController
             $cpt = ($compte[0]->getId()+1);
         }
         return $cpt;
-      }
+    }
+    
 }

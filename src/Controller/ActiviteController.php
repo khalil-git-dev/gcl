@@ -12,12 +12,18 @@ use Symfony\Component\Serializer\Serializer;
 use App\Repository\ActiviteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 /**
  * @Route("/api", name="api_")
  */
 
 class ActiviteController extends AbstractController
 {
+    private $tokenStorage;
+    public function __construct(TokenStorageInterface $tokenStorage)
+    {
+        $this->tokenStorage = $tokenStorage;
+    }
     /**
      * @Route("/activite", name="activite"),methods={"GET"})
      */
@@ -83,6 +89,7 @@ public function addActiviter(Request $request, EntityManagerInterface $entityMan
          $activiter->setLibelleAct($donnees->libelleAct);
          $activiter->setNatureAct($donnees->natureAct);
          $activiter->setTypeAct($donnees->typeAct);
+         $activiter->setMontant($donnees->montant);
         
 
         // On sauvegarde en base
@@ -118,6 +125,7 @@ public function editActiviter($id , Request $request ,EntityManagerInterface $en
         $Activiter->setLibelleAct($donnees->libelleAct);
         $Activiter->setNatureAct($donnees->natureAct);
         $Activiter->setTypeAct($donnees->typeAct);
+        $Activiter->setMontant($donnees->montant);
         // $user = $this->getDoctrine()->getRepository(Users::class)->find(1);
         // $article->setUsers($user);
 
@@ -127,7 +135,7 @@ public function editActiviter($id , Request $request ,EntityManagerInterface $en
         $entityManager->flush();
 
         // On retourne la confirmation
-        return new Response('ok', $code);
+        return new Response('ok');
     }
 /**
  * @Route("/activiter_supprimer/{id}", name="supprime", methods={"DELETE"})

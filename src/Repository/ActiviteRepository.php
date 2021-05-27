@@ -25,7 +25,7 @@ class ActiviteRepository extends ServiceEntityRepository
     public function apiFindAll() : array
 {
     $qb = $this->createQueryBuilder('a')
-        ->select('a.id', 'a.libelleAct', 'a.natureAct', 'a.typeAct')
+        ->select('a.id', 'a.libelleAct', 'a.natureAct', 'a.typeAct','a.montant')
         ->orderBy('a.id', 'ASC');
 
     $query = $qb->getQuery();

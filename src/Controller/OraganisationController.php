@@ -68,7 +68,7 @@ class OraganisationController extends AbstractController
                 $class->setNiveau($niveau);
 
                 $entityManager->persist($class);
-                $entityManager->flush();
+                $cour->addClasse($class);     
                 
                 //dd($cour);
                 $cour->setDetailCr($values->detail);
@@ -76,7 +76,6 @@ class OraganisationController extends AbstractController
                 $cour->setDureeCr($values->duree);
                 $cour->setDiscipline($matier);
                 $cour->setFormateur($formateur);
-                $cour->addClasse($values->class);
                 $cour->setSalle($salle);
                 $entityManager->persist($cour);
                 $entityManager->flush();

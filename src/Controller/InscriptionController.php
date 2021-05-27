@@ -109,7 +109,7 @@ class InscriptionController extends AbstractController
 
         $entityManager->persist($dossier);
         #####    ACTIVITE  #####
-        foreach($values->activites as $key => $val)
+        foreach($values->activites as $val)
         {
             $activite = new Activite();
             $activite->setLibelleAct($val->libelleActiv);

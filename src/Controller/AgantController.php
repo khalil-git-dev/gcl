@@ -28,7 +28,49 @@ class AgantController extends AbstractController
         $this->tokenStorage = $tokenStorage;
     }
     
-   
+   /**
+     * @Route("/Agant_soin", name="activite"),methods={"GET"})
+     */
+    public function liste(AgentSoinsRepository $agantrepo)
+    {
+        $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
+        if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR" || $rolesUser == "ROLE_INTENDANT")) {
+            $data = [
+                'status' => 401,
+                'message' => 'Vous n\'avez pas les droits pour effectuer cette operation'
+            ];
+            return new JsonResponse($data, 401);
+        }
+        // On récupère la liste des articles
+    $agant = $agantrepo->FindAll();
+
+    // On spécifie qu'on utilise l'encodeur JSON
+    $encoders = [new JsonEncoder()];
+
+    // On instancie le "normaliseur" pour convertir la collection en tableau
+    $normalizers = [new ObjectNormalizer()];
+
+    // On instancie le convertisseur
+    $serializer = new Serializer($normalizers, $encoders);
+
+    // On convertit en json
+    $jsonContent = $serializer->serialize($agant, 'json', [
+        'circular_reference_handler' => function ($object) {
+            return $object->getId();
+        }
+    ]);
+
+    // On instancie la réponse
+    $response = new Response($jsonContent);
+
+    // On ajoute l'entête HTTP
+    $response->headers->set('Content-Type', 'application/json');
+
+    // On envoie la réponse
+    return $response;
+
+        
+    }
      /**
  * @Route("/agant_ajout", name="ajout",methods={"POST"})
  */

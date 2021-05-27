@@ -36,6 +36,11 @@ class ServiceMedicale
      */
     private $agentSoins;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $detailSmed;
+
     public function __construct()
     {
         $this->bulletins = new ArrayCollection();
@@ -115,6 +120,18 @@ class ServiceMedicale
                 $agentSoin->setServiceMed(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDetailSmed(): ?string
+    {
+        return $this->detailSmed;
+    }
+
+    public function setDetailSmed(string $detailSmed): self
+    {
+        $this->detailSmed = $detailSmed;
 
         return $this;
     }

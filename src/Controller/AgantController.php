@@ -34,7 +34,7 @@ class AgantController extends AbstractController
     public function liste(AgentSoinsRepository $agantrepo)
     {
         $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
-        if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR" || $rolesUser == "ROLE_INTENDANT")) {
+        if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR" || $rolesUser == "ROLE_SURVEILLENT")) {
             $data = [
                 'status' => 401,
                 'message' => 'Vous n\'avez pas les droits pour effectuer cette operation'
@@ -78,7 +78,7 @@ public function addAgant(Request $request, EntityManagerInterface $entityManager
 {
 
     $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
-        if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR" || $rolesUser == "ROLE_INTENDANT")) {
+        if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR" || $rolesUser == "ROLE_SURVEILLENT")) {
             $data = [
                 'status' => 401,
                 'message' => 'Vous n\'avez pas les droits pour effectuer cette operation'
@@ -100,6 +100,8 @@ public function addAgant(Request $request, EntityManagerInterface $entityManager
         // On hydrate l'objet
          $agant->setNomCompletAgent($donnees->nomCompletAgent);
          $agant->setServiceMed($compte);
+         $agant->setTypeAgt($donnees->typeAgt);
+         $agant->setTelephoneAgt($donnees->telephoneAgt);
          
         
 
@@ -113,7 +115,8 @@ public function addAgant(Request $request, EntityManagerInterface $entityManager
     //}
     return new Response('Failed', 404);
 }
-/**
+
+   /**
  * @Route("/agant_modifier/{id}", name="edit", methods={"PUT"})
  */
 
@@ -138,6 +141,8 @@ public function editagant ($id , Request $request ,EntityManagerInterface $entit
         // On hydrate l'objet
         $agant->setNomCompletAgent($donnees->nomCompletAgent);
          $agant->setServiceMed($compte);
+         $agant->setTypeAgt($donnees->typeAgt);
+         $agant->setTelephoneAgt($donnees->telephoneAgt);
         // $user = $this->getDoctrine()->getRepository(Users::class)->find(1);
         // $article->setUsers($user);
 
@@ -148,6 +153,35 @@ public function editagant ($id , Request $request ,EntityManagerInterface $entit
 
         // On retourne la confirmation
         return new Response('ok');
+    }
+    /**
+ * @Route("/agant_supprimer/{id}", name="edit", methods={"DELETE"})
+ */
+
+public function deleteagant ($id , Request $request ,EntityManagerInterface $entityManager) 
+{
+    $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
+    if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR" || $rolesUser == "ROLE_SURVEILLENT")) {
+        $data = [
+            'status' => 401,
+            'message' => 'Vous n\'avez pas les droits pour effectuer cette operation'
+        ];
+        return new JsonResponse($data, 401);
+    }// On décode les données envoyées
+
+     $donnees = json_decode($request->getContent());
+     $reposAgant = $this->getDoctrine()->getRepository(AgentSoins::class);
+     $Agant = $reposAgant->find($id);
+     //$post = $this->getDoctrine()->getRepository(ServiceMedicale::class);
+     //$compte = $post->find($donnees->id);
+
+    
+    
+    $entityManager = $this->getDoctrine()->getManager();
+    $entityManager->remove($Agant);
+   // $entityManager->remove($compte);
+    $entityManager->flush();
+    return new Response('ok');
     }
     
 }

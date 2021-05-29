@@ -4,8 +4,10 @@ namespace App\Entity;
 
 use App\Repository\AgentSoinsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
+ * @ApiResource()
  * @ORM\Entity(repositoryClass=AgentSoinsRepository::class)
  */
 class AgentSoins

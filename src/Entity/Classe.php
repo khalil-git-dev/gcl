@@ -1,15 +1,19 @@
 <?php
 
 namespace App\Entity;
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\ClasseRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ClasseRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ * collectionOperations={
+ *    "get"},
+ *   normalizationContext={"groups"={"classe"}},)
  * @ORM\Entity(repositoryClass=ClasseRepository::class)
  */
 
@@ -19,16 +23,19 @@ class Classe
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"classe"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=30)
+     * @Groups({"classe"})
      */
     private $libelleCl;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"discipline"})
      */
     private $descriptionCl;
 

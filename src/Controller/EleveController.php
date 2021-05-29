@@ -5,8 +5,7 @@ namespace App\Controller;
 use App\Entity\Eleve;
 use App\Entity\Classe;
 use App\Entity\Inscription;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\EleveRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -81,14 +80,14 @@ class EleveController extends AbstractController
      */
     public function listEleveSemaine(EleveRepository $eleveRepo, Request $request, EntityManagerInterface $entityManager)
     {
-        // $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
-        // if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_INTENDANT" || $rolesUser == "ROLE_SURVEILLANT")) {
-        //     $data = [
-        //         'status' => 401,
-        //         'message' => 'Vous n\'avez pas les droits pour lister'
-        //     ];
-        //     return new JsonResponse($data, 401);
-        // }
+        $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
+        if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_INTENDANT" || $rolesUser == "ROLE_SURVEILLANT")) {
+            $data = [
+                'status' => 401,
+                'message' => 'Vous n\'avez pas les droits pour lister'
+            ];
+            return new JsonResponse($data, 401);
+        }
 
         //recuperer  des jours a une date
        // $date ="2020-01-29";
@@ -98,11 +97,11 @@ class EleveController extends AbstractController
        // $date=explode('-','2021-05-27');
       // dd(date('W',mktime(0,0,0,$date[1],$date[2],$date[0])));
        
-        #Recuperer le jour d'une date
-        $datejour = explode('-', Date('Y-m-d'));
-        $date=explode('-','2020-05-25');
-       dd(date('d',mktime(0,0,0,$datejour[1],$datejour[2],$datejour[0]))." ".date('d',mktime(0,0,0,$date[1],$date[2],$date[0])));
-        //  Couper la date 
+    //     #Recuperer le jour d'une date
+    //     $datejour = explode('-', Date('Y-m-d'));
+    //     $date=explode('-','2020-05-25');
+    //    dd(date('d',mktime(0,0,0,$datejour[1],$datejour[2],$datejour[0]))." ".date('d',mktime(0,0,0,$date[1],$date[2],$date[0])));
+    //     //  Couper la date 
         // dd(substr(Date('Y-m-d H:m:s'), 0, 10));
 
         // $datejour  =  explode('-', Date('Y-m-d'));

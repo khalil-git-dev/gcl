@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Date;
 use App\Entity\Cours;
 use App\Entity\Salle;
+use App\Entity\Serie;
 use App\Entity\Classe;
+use App\Entity\Niveau;
 use App\Entity\Formateur;
 use App\Entity\Discipline;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,9 +18,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
- /**
-     * @Route("/api")
- */
+/**
+* @Route("/api")
+*/
 class OraganisationController extends AbstractController
 {
     private $tokenStorage;
@@ -27,7 +29,7 @@ class OraganisationController extends AbstractController
         $this->tokenStorage = $tokenStorage;
     }
     /**
-     * @Route("/oraganisation", name="oraganisation")
+     * @Route("/organiserCour", name="oraganisation" ,methods={"POST"})
      */
     public function organisationCour(EntityManagerInterface $entityManager,Request $request)
     {
@@ -45,7 +47,12 @@ class OraganisationController extends AbstractController
        //recupere le formateur
        $repofor= $this->getDoctrine()->getRepository(Formateur::class);
        $formateur=$repofor->find($values->formateur);
+
+        //recupere le formateur
+        $repoCl= $this->getDoctrine()->getRepository(Classe::class);
+        $classe=$repoCl->find($values->class);
       
+       
        // recupere sall
        $reposal= $this->getDoctrine()->getRepository(Salle::class);
        $salle=$reposal->find($values->sall);
@@ -82,7 +89,7 @@ class OraganisationController extends AbstractController
 
                 $data = [
                     'status' => 201,
-                    'message' => ' le  cours a ete organiser' 
+                    'message' => ' le  cours a ete organiser par:' .$roleUser
                 ];
                 return new JsonResponse($data, 201);
                 

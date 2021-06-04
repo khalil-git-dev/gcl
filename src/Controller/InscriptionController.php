@@ -131,7 +131,7 @@ class InscriptionController extends AbstractController
         $inscription->setDate($date);
         $inscription->setStatusIns("En cours");
         $inscription->setDossier($dossier);
-        //$inscription->addActivite($activite);
+        // $inscription->addActivite($activite);
         $entityManager->persist($inscription);
         
         $entityManager->flush();

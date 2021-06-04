@@ -49,12 +49,9 @@ class OraganisationController extends AbstractController
        $formateur=$repofor->find($values->formateur);
 
         //recupere le formateur
-        $repoSeri= $this->getDoctrine()->getRepository(Serie::class);
-        $serie=$repoSeri->find($values->serie);
-
-         //recupere le formateur
-       $repoNiv= $this->getDoctrine()->getRepository(Niveau::class);
-       $niveau=$repoNiv->find($values->niveau);
+        $repoCl= $this->getDoctrine()->getRepository(Classe::class);
+        $classe=$repoCl->find($values->class);
+      
        
        // recupere sall
        $reposal= $this->getDoctrine()->getRepository(Salle::class);
@@ -71,14 +68,6 @@ class OraganisationController extends AbstractController
             return new JsonResponse($data, 401);      
            
         }
-                $class->setLibelleCl($values->libelleC);
-                $class->setDescriptionCl($values->description);
-                $class->setNbMaxEleve($values->nbrEleve);
-                $class->setSerie($serie);
-                $class->setNiveau($niveau);
-
-                $entityManager->persist($class);
-                $entityManager->flush();
                 
                 //dd($cour);
                 $cour->setDetailCr($values->detail);
@@ -86,7 +75,7 @@ class OraganisationController extends AbstractController
                 $cour->setDureeCr($values->duree);
                 $cour->setDiscipline($matier);
                 $cour->setFormateur($formateur);
-                $cour->addClasse($class);
+                $cour->addClasse($classe);
                 $cour->setSalle($salle);
                 $entityManager->persist($cour);
                 $entityManager->flush();

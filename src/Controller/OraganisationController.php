@@ -67,15 +67,7 @@ class OraganisationController extends AbstractController
             ];
             return new JsonResponse($data, 401);      
            
-        }
-                $class->setLibelleCl($values->libelleC);
-                $class->setDescriptionCl($values->description);
-                $class->setNbMaxEleve($values->nbrEleve);
-                $class->setSerie($serie);
-                $class->setNiveau($niveau);
-
-                $entityManager->persist($class);
-                $cour->addClasse($class);     
+        }               
                 
                 //dd($cour);
                 $cour->setDetailCr($values->detail);
@@ -84,6 +76,7 @@ class OraganisationController extends AbstractController
                 $cour->setDiscipline($matier);
                 $cour->setFormateur($formateur);
                 $cour->setSalle($salle);
+                $cour->addClasse($class); 
                 $entityManager->persist($cour);
                 $entityManager->flush();
 

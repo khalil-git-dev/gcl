@@ -67,24 +67,36 @@ class OraganisationController extends AbstractController
             ];
             return new JsonResponse($data, 401);      
            
-        }               
-                
-                //dd($cour);
-                $cour->setDetailCr($values->detail);
-                $cour->setLibelleCr($values->libelle);
-                $cour->setDureeCr($values->duree);
-                $cour->setDiscipline($matier);
-                $cour->setFormateur($formateur);
-                $cour->setSalle($salle);
-                $cour->addClasse($class); 
-                $entityManager->persist($cour);
-                $entityManager->flush();
+        }   foreach ($classe as $key => $val) {
+            $class->setLibelleCl($values->libelleC);
+            $class->setDescriptionCl($values->description);
+            $class->setNbMaxEleve($values->nbrEleve);
+            $class->setSerie($serie);
+            $class->setNiveau($niveau);
+            $entityManager->persist($class);
+            $cour->addClasse($class);
+        }            
+       
+     
+        
+        //dd($cour);
+        $cour->setDetailCr($values->detail);
+        $cour->setLibelleCr($values->libelle);
+        $cour->setDureeCr($values->duree);
+        $cour->setDiscipline($matier);
+        $cour->setFormateur($formateur);
+        //$cour->addClasse($values->class);
+        $cour->setSalle($salle);
+        $entityManager->persist($cour);
+        $entityManager->flush();
 
-                $data = [
-                    'status' => 201,
-                    'message' => ' le  cours a ete organiser par:' .$roleUser
-                ];
-                return new JsonResponse($data, 201);
+        $data = [
+            'status' => 201,
+            'message' => ' le  cours a ete organiser' 
+        ];
+        return new JsonResponse($data, 201);
+          
+                
                 
     
     }

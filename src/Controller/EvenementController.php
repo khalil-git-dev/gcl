@@ -38,7 +38,7 @@ class EvenementController extends AbstractController
         return $this->json($data, 201);
     }
 
-                #####   Enregistrer un Evenement  #####
+                #####   Enregistrer un Evènement  #####
 
     /**
      * @Route("/saveEvenement", name="saveEvenement", methods={"POST"})
@@ -71,7 +71,7 @@ class EvenementController extends AbstractController
 
     }
 
-                #####   Modifier un Evenement  #####
+                #####   Modifier un Evènement  #####
 
     /**
      * @Route("/evenement/editer/{id}", name="editEvent", methods={"PUT"})
@@ -111,4 +111,34 @@ class EvenementController extends AbstractController
             ];
             return new JsonResponse($data, 201);
         }
+
+
+                #####   Lister les Evènements  #####
+
+     /**
+     * @Route("/list_events", name="list_events" , methods={"GET"})
+     */
+    public function listEvent(EvenementRepository $eventManager)
+    {
+        $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
+        if (!($rolesUser == "ROLE_PROVISEUR" || $rolesUser == "ROLE_INTENDANT")) {
+            $data = [
+                'status' => 401,
+                'message' => 'Vous n\'avez pas les droits pour effectuer cette operation'
+            ];
+            return new JsonResponse($data, 401);
+        }
+
+        $event = $eventManager->findAll();
+        foreach($event as $events){
+            $data[] = [
+                'typeEven' => $events->getTypeEven(),
+                'libelleEven' => $events->getLibelleEven(),
+                'descriptionEven' => $events->getDescriptionEven(),
+                'date' => $events->getDate(),
+           ];
+        }
+
+        return $this->json($data, 201); 
+    }
 }

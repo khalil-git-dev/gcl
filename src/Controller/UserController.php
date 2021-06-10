@@ -119,7 +119,6 @@ class UserController extends AbstractController
             
         //     $entityManager->persist($agentSoins);
         // }
-        
         $entityManager->flush();
 
         // L'envoie de email pour la connexion des utilisateurs apres création

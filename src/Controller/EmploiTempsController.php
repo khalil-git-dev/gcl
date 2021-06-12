@@ -68,11 +68,12 @@ class EmploiTempsController extends AbstractController
     $formateur= $repofor->findBy(array('typeFor' => 'DESC'));
     
     $horaire= '';
-    switch ('typeFor'){
+    switch ($formateur= $this->getTypeFor('typeFor')){
 	    case 'PES':
            $horaire = 21;
 
         break;
+        dd($formateur);
         case 'VOCATAIRE':
             # code...
         break;
@@ -80,7 +81,7 @@ class EmploiTempsController extends AbstractController
             # code...
         break;
         }  
-        dd($formateur);
+        
        //Affectation d'un formateur a un cours
         //   $formateur =  $repofor->find($values->idformateur);
         //   $classe = $repoClass->find($values->idClasse);

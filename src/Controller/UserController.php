@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\AgentSoins;
 use App\Entity\User;
 use App\Entity\Formateur;
 use App\Entity\Role;

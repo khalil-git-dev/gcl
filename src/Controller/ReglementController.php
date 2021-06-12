@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-// require 'vendor/autoload.php';
-use \Mailjet\Resources;
 use App\Entity\Facture;
 use App\Entity\Reglement;
 use Doctrine\ORM\EntityManagerInterface;

@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Proviseur;
 use App\Entity\Role;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -54,13 +55,32 @@ class AppFixtures extends Fixture
         $role8 = new Role();
         $role8->setLibelle('PARENT');
         $manager->persist($role8);
+
+        $role9 = new Role();
+        $role9->setLibelle('AGENT-SOINS');
+        $manager->persist($role9);
     
         $supAdmin = new User();
         $supAdmin->setUsername('supadmin@gmail.com');
         $supAdmin->setRole($role);
         $supAdmin->setPassword($this->encoderpass->encodePassword($supAdmin, "supadmin"));
-
         $manager->persist($supAdmin);
+
+        $userProviseur = new User();
+        $userProviseur->setUsername('proviseur@gmail.com');
+        $userProviseur->setRole($role1);
+        $userProviseur->setPassword($this->encoderpass->encodePassword($userProviseur, "proviseur"));
+        $manager->persist($userProviseur);
+
+        $proviseur = new Proviseur();
+        $proviseur->setPrenomPro("Madame");
+        $proviseur->setNomPro("preira");
+        $proviseur->setTelephonePro("772819029");
+        $proviseur->setAdresse("Kounoune");
+        $proviseur->setEmailPro("fpreira2@gmail.com");
+        $proviseur->setUser($userProviseur);
+        $manager->persist($proviseur);
+
         $manager->flush();
 
     }

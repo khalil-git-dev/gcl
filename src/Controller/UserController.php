@@ -2,16 +2,19 @@
 
 namespace App\Controller;
 
+use App\Entity\AgentSoins;
 use App\Entity\User;
 use App\Entity\Formateur;
 use App\Entity\Role;
 use App\Entity\Censeur;
 use App\Entity\Surveillant;
 use App\Entity\Intendant;
+use App\Entity\ServiceMedicale;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
+use Mailjet\Resources;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -45,9 +48,10 @@ class UserController extends AbstractController
         $values = json_decode($request->getContent());
         $user = new User();
                 #####    GENERATION DU PASSWORD     #####
-        $pwd= $this->passwordGenered(9);
+        $number= $this->passwordGenered(2);
                 #####    Enregistrement sur la table user   #####
-        $user->setUsername($values->nom .".". $values->prenom[0]."@gmail.com");
+        
+        $user->setUsername(strtolower(preg_replace('/\s+/', '', $values->nom .".". $values->prenom[0])).$number."@gmail.com");
         // $user->setPassword($pwd);
         $user->setPassword($userPasswordEncoder->encodePassword($user, $values->nom));
         $reposRole = $this->getDoctrine()->getRepository(Role::class);
@@ -101,7 +105,62 @@ class UserController extends AbstractController
             
             $entityManager->persist($surveillent);
         }
+        // else if($libelle == "AGENT-SOINS"){
+
+        //     $agentSoins = new AgentSoins();
+        //     $serviceMedRole = $this->getDoctrine()->getRepository(ServiceMedicale::class);
+        
+        //     $agentSoins->setNomCompletAgent($values->prenom." ".$values->nom);
+        //     $agentSoins->setServiceMed($serviceMedRole->find($values->service));
+        //     $agentSoins->setTypeAgt($values->typeAgent);
+        //     $agentSoins->setTelephoneAgt($values->telephone);
+        //     $agentSoins->setUser($user);
+            
+        //     $entityManager->persist($agentSoins);
+        // }
+        
         $entityManager->flush();
+
+        // L'envoie de email pour la connexion des utilisateurs apres création
+
+        $emailUser = $user->getUsername();
+        $pwdUser = $values->nom;
+        
+        $mj = new \Mailjet\Client('5c3349506881286b4068585e246d6d75','4c6f0dd6c9c942376bffa95c15abf22c',true,['version' => 'v3.1']);
+        // Pour un lien dans le body ==> <a href='https://www.mailjet.com/'>Mailjet</a>!
+        $body = [
+            'Messages' => [
+            [
+                'From' => [
+                'Email' => "gestioncollegelycee@gmail.com",
+                'Name' => "Lycee de Kounoune"
+                ],
+                'To' => [
+                    [
+                        'Email' => $values->email,
+                        'Name' => $values->prenom
+                    ]
+                ],
+                'Subject' => "Information de connexion.",
+                'TextPart' => "My first Mailjet email",
+
+                'HTMLPart' => "<h2>Bonjour $values->prenom,</h2><br />
+                    <h4>
+                        Pour vous connecter veuillez utiliser l'adresse email : <b> $emailUser </b>
+                        <br />
+                        Et le mot de passe : <b> $pwdUser </b>
+                    </h4><br/>
+
+                    <br/><b>NB: Si jamais vous ne parvenez pas à vous connecter veuillez vous rapprochez de votre administrateur.</b>",
+
+                'CustomID' => "AppGettingStartedTest"
+                ]
+            ]
+        ];  
+        
+        $response = $mj->post(Resources::$Email, ['body' => $body]);
+        // dd($response);
+        // $response->success() && var_dump($response->getData());
 
         $data = [
             'status' => 201,

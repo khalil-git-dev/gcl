@@ -75,7 +75,7 @@ class AppFixtures extends Fixture
         $proviseur = new Proviseur();
         $proviseur->setPrenomPro("Madame");
         $proviseur->setNomPro("preira");
-        $proviseur->setTelephonePro("772819029");
+        $proviseur->setTelephonePro("772000000");
         $proviseur->setAdresse("Kounoune");
         $proviseur->setEmailPro("fpreira2@gmail.com");
         $proviseur->setUser($userProviseur);

@@ -60,9 +60,15 @@ class Formateur
      */
     private $user;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Note::class, mappedBy="formateur")
+     */
+    private $notes;
+
     public function __construct()
     {
         $this->cours = new ArrayCollection();
+        $this->notes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -180,6 +186,36 @@ class Formateur
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Note[]
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function addNote(Note $note): self
+    {
+        if (!$this->notes->contains($note)) {
+            $this->notes[] = $note;
+            $note->setFormateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNote(Note $note): self
+    {
+        if ($this->notes->removeElement($note)) {
+            // set the owning side to null (unless already changed)
+            if ($note->getFormateur() === $this) {
+                $note->setFormateur(null);
+            }
+        }
 
         return $this;
     }

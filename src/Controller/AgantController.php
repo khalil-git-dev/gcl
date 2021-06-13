@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\Serializer;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AgentSoinsRepository;
 use App\Entity\ServiceMedicale;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @Route("/api", name="api_")

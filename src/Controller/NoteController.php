@@ -3,16 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Bulletin;
-use App\Entity\Date;
 use App\Entity\Eleve;
 use App\Entity\Evaluation;
 use App\Entity\Note;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -39,6 +38,7 @@ class NoteController extends AbstractController
     /**
      * @Route("/ajoutNoteEleve", name="ajoutNoteEleve", methods={"POST"})
      */
+
     public function ajoutNoteEleve(Request $request, EntityManagerInterface $entityManager, GetteurController $getter)
     {
         $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
@@ -53,12 +53,12 @@ class NoteController extends AbstractController
         $reposEvaluation = $this->getDoctrine()->getRepository(Evaluation::class);
         $evaluation = $reposEvaluation->find($values->elavuation);
         foreach($values->eleves as $key => $eleveId){
-            
             $reposEleve = $this->getDoctrine()->getRepository(Eleve::class);
-            $eleve = $reposEleve->find($eleveId);
+            $eleve = $reposEleve->find($values->eleves[6]);
             $dossierScolaire = $eleve->getDossiers()[0];
+            $bulletin = $eleve->getDossiers()[0]->getBulletins()[0];
             #####   creation du bulletin s'il n'existe pas encore    #####
-            if(!$dossierScolaire->getEleve()->getBulletins()[0]){
+            if(!$bulletin){
                 $bulletin = new Bulletin();
                 $bulletin->setLibelleBul("Bulletin Semestriel");
                 $bulletin->setTypeBul("Note");

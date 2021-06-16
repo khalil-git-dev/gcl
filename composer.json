@@ -11,9 +11,7 @@
         "doctrine/doctrine-bundle": "^2.3",
         "doctrine/doctrine-migrations-bundle": "^3.1",
         "doctrine/orm": "^2.8",
-        "dompdf/dompdf": "^1.0",
         "lexik/jwt-authentication-bundle": "^2.11",
-        "mailjet/mailjet-apiv3-php": "^1.5",
         "phpdocumentor/reflection-docblock": "^5.2",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/asset": "4.4.*",
@@ -43,7 +41,6 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.4",
-        "fzaninotto/faker": "^1.5",
         "symfony/browser-kit": "^4.4",
         "symfony/css-selector": "^4.4",
         "symfony/debug-bundle": "^4.4",

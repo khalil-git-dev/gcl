@@ -26,16 +26,6 @@ class NoteController extends AbstractController
     }
     
     /**
-     * @Route("/note", name="note")
-     */
-    public function index(): Response
-    {
-        return $this->render('note/index.html.twig', [
-            'controller_name' => 'NoteController',
-        ]);
-    }
-
-    /**
      * @Route("/ajoutNoteEleve", name="ajoutNoteEleve", methods={"POST"})
      */
 

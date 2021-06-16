@@ -9,7 +9,6 @@ use App\Entity\Note;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -24,7 +23,7 @@ class NoteController extends AbstractController
     {
         $this->tokenStorage = $tokenStorage;
     }
-    
+
     /**
      * @Route("/ajoutNoteEleve", name="ajoutNoteEleve", methods={"POST"})
      */

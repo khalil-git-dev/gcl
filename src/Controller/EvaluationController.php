@@ -108,8 +108,7 @@ class EvaluationController extends AbstractController
 
         // On retourne la confirmation
         return new Response('ok', 201);
-    //}
-    return new Response('Failed', 404);
+    
     }
     /**
      * @Route("/evaluation-modifier-{id}", name="evaluation", methods={"PUT"})
@@ -149,8 +148,7 @@ class EvaluationController extends AbstractController
 
         // On retourne la confirmation
         return new Response('ok', 201);
-    //}
-    return new Response('Failed', 404);
+
     }
     /**
      * @Route("/evaluation-supprimer-{id}", name="evaluation", methods={"DELETE"})
@@ -179,7 +177,6 @@ class EvaluationController extends AbstractController
 
         // On retourne la confirmation
         return new Response('ok', 201);
-    //}
-    return new Response('Failed', 404);
+
     }
 }

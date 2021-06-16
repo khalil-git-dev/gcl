@@ -30,7 +30,7 @@ class AgantController extends AbstractController
     }
     
    /**
-     * @Route("/Agant_soin", name="activite"),methods={"GET"})
+     * @Route("/Agant_soin", name="activite",methods={"GET"})
      */
     public function liste(AgentSoinsRepository $agantrepo)
     {
@@ -114,7 +114,7 @@ public function addAgant(Request $request, EntityManagerInterface $entityManager
         // On retourne la confirmation
         return new Response('ok', 201);
     //}
-    return new Response('Failed', 404);
+    //return new Response('Failed', 404);
 }
 
    /**

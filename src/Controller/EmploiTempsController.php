@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use DateTime;
+use DatePeriod;
 use App\Entity\Date;
 use App\Entity\Cours;
 use App\Entity\Salle;
@@ -20,6 +21,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use DateInterval;
 /**
  * @Route("/api", name="api_")
  */
@@ -52,7 +54,25 @@ class EmploiTempsController extends AbstractController
     //   .date('d', $timestamp)." ".$mois[date('m', $timestamp)-1]." ".date('Y', $timestamp);
 
     //return $date;
- 
+    // $period = new DatePeriod(
+    //     new DateTime("last monday midnight"),
+    //     new DateInterval('P1D'), // 1 jour
+    //     5 // 5 périodes/boucles
+    // );
+    //     foreach ($period as $classe) {
+    //         $classes[] = array(
+    //             "lundi"    => $classe,
+    //             "mardi" => $classe
+    //         );
+    //     }
+    
+    // dd($period);
+    // $lundi = date('Y-m-d', mktime(0, 0, 0, date('m'), date('d')-date('N')+1, date('Y')));
+    // $mardi = date("Y-m-d", strtotime($lundi." +1 days"));
+    // $mercredi = date("Y-m-d", strtotime($lundi." +2 days"));
+    // $jeudi = date("Y-m-d", strtotime($lundi." +3 days"));
+    // $vendredi = date("Y-m-d", strtotime($lundi." +4 days"));
+    // dd($lundi);
     $cour = new Cours();
     $date = new Date();
     $date->setDateDebut(new \DateTime());
@@ -65,23 +85,22 @@ class EmploiTempsController extends AbstractController
         $matier=$repoMat->find($values->discipline);     
        //recupere le formateur
        $repofor= $this->getDoctrine()->getRepository(Formateur::class);
-    $formateur= $repofor->findBy(array('typeFor' => 'DESC'));
-    
-    $horaire= '';
-    switch ($formateur= $this->getTypeFor('typeFor')){
-	    case 'PES':
-           $horaire = 21;
-
-        break;
-        dd($formateur);
-        case 'VOCATAIRE':
+    $formateur= $repofor->findBy(array(), array('typeFor' => 'ASC'), null, null);
+   
+    switch ($formateur[0]->getTypeFor()){
+       
+       case "VOCATAIRE":
+            $horaire= 21;
+            break;
+       // dd($formateur);
+       case "PROFESSEUR CONTRACTUEL":
             # code...
-        break;
-        case 'PROFESSEUR CONTRACTUEL':
-            # code...
-        break;
-        }  
-        
+            break;
+       default:
+            break;
+        } 
+       // dd($formateur);
+   
        //Affectation d'un formateur a un cours
         //   $formateur =  $repofor->find($values->idformateur);
         //   $classe = $repoClass->find($values->idClasse);
@@ -89,7 +108,7 @@ class EmploiTempsController extends AbstractController
        // recupere sall
        $reposal= $this->getDoctrine()->getRepository(Salle::class);
        $salle=$reposal->find($values->salle);
-        dd($salle);
+        //dd($salle);
        foreach($values->classes as $key => $value){
 
         $cour->addClasse($repoClass->find($value));
@@ -99,9 +118,9 @@ class EmploiTempsController extends AbstractController
 
        $cour->setDetailCr($values->detail);
        $cour->setLibelleCr($values->libelle);
-       $cour->setDureeCr(new \DateTime($values->duree));
+       $cour->setDureeCr($values->duree);
        $cour->setDiscipline($matier);
-       $cour->setFormateur($formateur);
+       $cour->setFormateur($formateur[0]->setTypeFor());
        $cour->setDateCours($date);
        $cour->setSalle($salle);
        $entityManager->persist($cour);

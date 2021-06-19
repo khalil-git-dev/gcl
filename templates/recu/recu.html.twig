@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>recu de reglement</title>
+    </head>
+    <body>
+    
+        <center><h4> MINISTERE DE L’EDUCATION NATIONALE<br/>INSPECTION D’ACADEMIE DE RUFISQUE </h4></center>
+                <center><h1> LYCEE DE KOUNOUNE </h1 ></center>
+            <h2>Récépissé de paiement de la facture : {{ facture.numeroFac }} </h2>
+            {# <p>Fait à Dakar le : {{ date('d-m-Y H:i:s') }} </p><br/> #}
+            <br/>
+            <label> Nom: {{ eleve.nomEle }}</label><br/>
+            <label> Prenom: {{ eleve.prenomEle }} </label><br/>
+            <label> Nationalité: {{ eleve.nationaliteElev }}</label><br/>
+            {# <label> Date de naissance:  {{ eleve.dateNaissEle }} </label><br/> #}
+            <label> Lieu de naissance: {{ eleve.lieuNaissEle }}</label><br/>
+            {# <label> Classe: {{  }} </label><br/> #}
+            <label> Telephone: {{ eleve.telEle }} </label><br/>
+            <label> Sexe: {{ eleve.sexeEle }} </label><br/>
+            <label> Nom complet de père: {{ eleve.nomCompletPere }} &nbsp; &nbsp; &nbsp; Téléphone: {{ eleve.telPere }}</label><br/>
+            <label> Nom complet de la mère: {{ eleve.nomCompletMere }} &nbsp; &nbsp; &nbsp; Téléphone: {{ eleve.telMere }}</label><br/>
+            <label> Nom complet du tuteur: {{ eleve.nomCompletTuteurLeg }} &nbsp; &nbsp; &nbsp; Téléphone: {{ eleve.telTuteurLeg }}</label><br/>
+           
+           <h3> Les inscriptions éffectuées</h3>
+             {# {% for key, activ in activites %}
+                    <tr><td>{{ activ.libelleAct }}</td><td>{{ activ.montant }}</td></tr>
+                {% endfor %}
+            #}
+
+            <h3>Montant globale des inscriptions</h3>
+            <label> Montant globale :  <b> {{ inscription.redevanceIns }}</b></label>
+            <br/>
+            <br/>
+            <p>Pour plus d'information veuillez vous rapprochez de l'administration</p>
+        
+    </body>
+</html>

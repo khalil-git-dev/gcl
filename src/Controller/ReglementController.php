@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-
 /**
  * @Route("/api")
  */
@@ -27,16 +26,17 @@ class ReglementController extends AbstractController
      */
     public function reglement(Request $request, EntityManagerInterface $entityManager)
     {
-        // $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
-        // if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR" || $rolesUser == "ROLE_INTENDANT")) {
-        //     $data = [
-        //         'status' => 401,
-        //         'message' => 'Vous n\'avez pas les droits pour effectuer cette operation'
-        //     ];
-        //     return new JsonResponse($data, 401);
-        // }
+        $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
+        if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR" || $rolesUser == "ROLE_INTENDANT")) {
+            $data = [
+                'status' => 401,
+                'message' => 'Vous n\'avez pas les droits pour effectuer cette operation'
+            ];
+            return new JsonResponse($data, 401);
+        }
         
         $values = json_decode($request->getContent());
+
         $reposFacture = $this->getDoctrine()->getRepository(Facture::class);
         $facture = $reposFacture->findOneBy(array('numeroFac' => $values->numFacture));
         
@@ -48,14 +48,14 @@ class ReglementController extends AbstractController
 
         $entityManager->persist($reglement);
         $entityManager->flush();
-
+        
         $data = [
             'status' => 201,
             'message' => "Reglement ".$facture->getNumeroFac()." affecturé avec succes. numéro règlement : ".$reglement->getNumeroReg()
         ];
+        
         return new JsonResponse($data, 201);
     }
-
 
     // Genegation de password alternative pour la premiere connexion user
     public function passwordGenered($length)

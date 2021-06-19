@@ -1,13 +1,10 @@
 <?php
 
 namespace App\Entity;
-use Doctrine\ORM\Mapping as ORM;
-use App\Repository\ClasseRepository;
-use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
-use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ApiResource(

@@ -2,13 +2,14 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use App\Repository\ClasseRepository;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+    /**
+     * @Route("/api")
+     */
 
 class ClasseController extends AbstractController
 {
@@ -19,9 +20,9 @@ class ClasseController extends AbstractController
     }
     
     /**
-     * @Route("/api/list-class", name="classe" , methods={"GET"})
+     * @Route("/list_class", name="list_class" , methods={"GET"})
      */
-    public function getClasse(ClasseRepository $classeManager)
+    public function listClasse(ClasseRepository $classeManager)
     {
         $classe = $classeManager->findAll();
         foreach($classe as $classes){

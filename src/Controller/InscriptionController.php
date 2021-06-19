@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Mailjet\Resources;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -58,13 +59,15 @@ class InscriptionController extends AbstractController
         #####    UTILISATEURS  #####
         // $pwdUser= $this->passwordGenered(9);
         // $pwdParent= $this->passwordGenered(9);
-        $user->setUsername(strtolower(preg_replace('/\s+/', '', $values->nom. "." .$values->prenom))."@gmail.com");
+        $number1= $this->generedNumber(2);
+        $number2= $this->generedNumber(2);
+        $user->setUsername(strtolower(preg_replace('/\s+/', '', $values->nom. "." .$values->prenom)).$number1."@gmail.com");
         $user->setPassword($userPasswordEncoder->encodePassword($user, $values->nom));
         $reposRole1 = $this->getDoctrine()->getRepository(Role::class);
         $user->setRole($reposRole1->findOneBy(array('libelle' => "USER")));
         $entityManager->persist($user);
 
-        $user2->setUsername(strtolower(preg_replace('/\s+/', '', $values->nomTuteur))."@gmail.com");
+        $user2->setUsername(strtolower(preg_replace('/\s+/', '', $values->nomTuteur)).$number2."@gmail.com");
         $user2->setPassword($userPasswordEncoder->encodePassword($user2, $values->nom));
         $reposRole2 = $this->getDoctrine()->getRepository(Role::class);
         $user2->setRole($reposRole2->findOneBy(array('libelle' => "PARENT")));
@@ -136,6 +139,7 @@ class InscriptionController extends AbstractController
         
         $entityManager->flush();
 
+        
         $data = [
             'status' => 201,
             'message' => "Un(e) Nouveau(lle) élève inscrit, consulter votre email pour vos informations de connexion."
@@ -155,4 +159,15 @@ class InscriptionController extends AbstractController
         return $cpt;
     }
     
+    // Genegation de password alternative pour la premiere connexion user
+    public function generedNumber($length)
+    {
+        $tab_match = [];
+        while (count($tab_match) < $length) {
+            preg_match_all('#\d#', hash("sha512", openssl_random_pseudo_bytes("128", $cstrong)), $matches);
+            $tab_match = array_merge($tab_match, $matches[0]);
+        }
+        shuffle($tab_match);
+        return implode('', array_slice($tab_match, 0, $length));
+    }
 }

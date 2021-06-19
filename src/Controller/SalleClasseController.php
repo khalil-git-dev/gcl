@@ -47,7 +47,7 @@ class SalleClasseController extends AbstractController
      /**
      * @Route("/modifierSall/{id}", name="modifer_sall", methods={"PUT"})
      */
-    public function modifer(SalleRepository $reposa, $id, EntityManagerInterface $em ,Request $req)
+    public function modifer($id, EntityManagerInterface $em ,Request $req)
     {
         $value = json_decode($req->getContent());
         $userconnect=$this->tokenStorage->getToken()->getUser();

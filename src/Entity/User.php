@@ -87,6 +87,11 @@ class User implements UserInterface
      */
     private $parents;
 
+    /**
+     * @ORM\OneToMany(targetEntity=AgentSoins::class, mappedBy="user")
+     */
+    private $agentSoins;
+
     public function __construct()
     {
         $this->isActive = true;
@@ -98,6 +103,7 @@ class User implements UserInterface
         $this->formateurs = new ArrayCollection();
         $this->eleves = new ArrayCollection();
         $this->parents = new ArrayCollection();
+        $this->agentSoins = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -407,6 +413,36 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($parent->getUserParent() === $this) {
                 $parent->setUserParent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|AgentSoins[]
+     */
+    public function getAgentSoins(): Collection
+    {
+        return $this->agentSoins;
+    }
+
+    public function addAgentSoin(AgentSoins $agentSoin): self
+    {
+        if (!$this->agentSoins->contains($agentSoin)) {
+            $this->agentSoins[] = $agentSoin;
+            $agentSoin->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAgentSoin(AgentSoins $agentSoin): self
+    {
+        if ($this->agentSoins->removeElement($agentSoin)) {
+            // set the owning side to null (unless already changed)
+            if ($agentSoin->getUser() === $this) {
+                $agentSoin->setUser(null);
             }
         }
 

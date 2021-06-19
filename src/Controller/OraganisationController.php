@@ -36,7 +36,6 @@ class OraganisationController extends AbstractController
        
         $values = json_decode($request->getContent());
         $cour=new Cours();
-        $class=new Classe();
         $date = new Date();
         $date->setDateDebut(new \DateTime());
         $date->setDateFin(new \DateTime());
@@ -67,9 +66,7 @@ class OraganisationController extends AbstractController
             ];
             return new JsonResponse($data, 401);      
            
-        }     
-
-     
+        }      
 
         //dd($cour);
         $cour->setDetailCr($values->detail);
@@ -77,14 +74,14 @@ class OraganisationController extends AbstractController
         $cour->setDureeCr($values->duree);
         $cour->setDiscipline($matier);
         $cour->setFormateur($formateur);
-        $cour->addClasse($values->class);
         $cour->setSalle($salle);
+        $cour->addClasse($classe);
         $entityManager->persist($cour);
         $entityManager->flush();
 
         $data = [
             'status' => 201,
-            'message' => ' le  cours a ete organiser' 
+            'message' => '  la cour organiser la duree est: '.$values->duree .'H'
         ];
         return new JsonResponse($data, 201);
           

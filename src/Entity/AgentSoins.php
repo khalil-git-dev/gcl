@@ -40,6 +40,17 @@ class AgentSoins
      */
     private $telephoneAgt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="agentSoins")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $email;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -89,6 +100,30 @@ class AgentSoins
     public function setTelephoneAgt(string $telephoneAgt): self
     {
         $this->telephoneAgt = $telephoneAgt;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
 
         return $this;
     }

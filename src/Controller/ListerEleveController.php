@@ -32,21 +32,30 @@ class ListerEleveController extends AbstractController
        
         if ($roleUser->getRoles()===['ROLE_SURVEILLENT']||$roleUser->getRoles()===['ROLE_INTENDANT']) {
             foreach($classes as $class){ 
-                $data=[];
-                 $libelleClass=$class->getLibelleCl();
+                 $libelleClass=$class->getLibelleCl()[0];
+                 $length = count($class->getEleve());
                  foreach ($class->getEleve() as $key => $eleve) {
-                  if ($libelleClass==$eleve->getClasse()->getLibelleCl()) {
+                  
                     $data[]=[
+                        'libelle'=>$libelleClass,
+                       'nom'=>$eleve->getNomEle(),
+                       'prenom'=>$eleve->getPrenomEle(),
+                        'dateDeNaiss'=>$eleve->getDateNaissEle(),
+                        'lieuDeNaiss'=>$eleve->getLieuNaissEle(),
+                        'nationalite'=>$eleve->getNationaliteElev(),
+                        'sexe'=>$eleve->getSexeEle(),
+                        'adress'=>$eleve->getAdresseEle(),
+                        'nomPere'=>$eleve->getNomCompletPere(),
+                         'nomTuteur'=>$eleve->getNomCompletTuteurLeg(),
+                    ];
 
-                        'libelle'=>$eleve->getLibelleCl(),
-                        'nom'=>$eleve->getNomEle(),
-                        'prenom'=>$eleve->getPrenomEle()     
-                               
-                    ];     
-                             
-                  }
-                 }
                
+                            
+                 }
+                if(count($data) == $length){
+                $datas[] =$eleve;
+
+            }
                // dd($class); 
             }
             return $this->json($data, 200);          

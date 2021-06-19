@@ -22,19 +22,17 @@ class BulletinRepository extends ServiceEntityRepository
     // /**
     //  * @return Bulletin[] Returns an array of Bulletin objects
     //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('b.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+    // public function findByExampleField($value)
+    // {
+    //     return $this->createQueryBuilder('b')
+    //         ->andWhere('b. = :val')
+    //         ->setParameter('val', $value)
+    //         ->orderBy('b.id', 'ASC')
+    //         ->setMaxResults(10)
+    //         ->getQuery()
+    //         ->getResult()
+    //     ;
+    // }
 
     /*
     public function findOneBySomeField($value): ?Bulletin

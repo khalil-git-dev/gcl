@@ -52,6 +52,11 @@ class Evaluation
      */
     private $note;
 
+    /**
+     * @ORM\Column(type="string", length=35)
+     */
+    private $typeEvel;
+
     public function __construct()
     {
         $this->eleve = new ArrayCollection();
@@ -155,6 +160,18 @@ class Evaluation
     public function removeNote(Note $note): self
     {
         $this->note->removeElement($note);
+
+        return $this;
+    }
+
+    public function getTypeEvel(): ?string
+    {
+        return $this->typeEvel;
+    }
+
+    public function setTypeEvel(string $typeEvel): self
+    {
+        $this->typeEvel = $typeEvel;
 
         return $this;
     }

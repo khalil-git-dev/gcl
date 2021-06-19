@@ -27,6 +27,12 @@ class GetteurController extends AbstractController
         $formateur = $reposFormateur->findOneBy(array('user' => $user));        
         return $formateur;
     }
-        
+
+    public function getDisciplinesClasse($classeId)
+    {
+        $reposCours = $this->getDoctrine()->getRepository(Cours::class);
+        return  $reposCours->findCoursByClasse($classeId);        
+    }
+
 
 }

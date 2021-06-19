@@ -22,19 +22,19 @@ class NoteRepository extends ServiceEntityRepository
     // /**
     //  * @return Note[] Returns an array of Note objects
     //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('n')
-            ->andWhere('n.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('n.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+    // public function findDevoirNote($devoir)
+    // {
+    //     return $this->createQueryBuilder('n')
+    //         ->from('evaluation', 'ev')
+    //         ->andWhere('ev.id IN n.evaluations')
+    //         ->andWhere('ev.typeEvel = :val1')
+    //         ->setParameter('val1', $devoir)
+    //         ->orderBy('n.id', 'ASC')
+    //         // ->setMaxResults(10)
+    //         ->getQuery()
+    //         ->getResult()
+    //     ;
+    // }
 
     /*
     public function findOneBySomeField($value): ?Note

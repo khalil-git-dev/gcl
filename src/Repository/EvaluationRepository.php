@@ -11,6 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Evaluation|null findOneBy(array $criteria, array $orderBy = null)
  * @method Evaluation[]    findAll()
  * @method Evaluation[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Evaluation[]    findDevoirSemestreByDiscipline(String $typeEval, String $semestre, Discipline::class $discipline) 
  */
 class EvaluationRepository extends ServiceEntityRepository
 {
@@ -19,22 +20,22 @@ class EvaluationRepository extends ServiceEntityRepository
         parent::__construct($registry, Evaluation::class);
     }
 
-    // /**
-    //  * @return Evaluation[] Returns an array of Evaluation objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Evaluation[] Returns an array of Evaluation objects
+     */
+    public function findDevoirSemestreByDiscipline($typeEval, $semestre,  $discipline)
     {
         return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('e.discipline = :val3')
+            // ->setParameter('val', $typeEval)
+            // ->setParameter('val2', $semestre)
+            ->setParameter('val3', $discipline)
             ->orderBy('e.id', 'ASC')
-            ->setMaxResults(10)
+            // ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?Evaluation

@@ -57,9 +57,16 @@ class Cours
      */
     private $dureeCr;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Eleve::class, inversedBy="absences")
+     */
+    private $absences;
+
     public function __construct()
     {
         $this->classe = new ArrayCollection();
+        $this->retards = new ArrayCollection();
+        $this->absences = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -159,6 +166,30 @@ class Cours
     public function setDureeCr(float $dureeCr): self
     {
         $this->dureeCr = $dureeCr;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Eleve[]
+     */
+    public function getAbsences(): Collection
+    {
+        return $this->absences;
+    }
+
+    public function addAbsence(Eleve $absence): self
+    {
+        if (!$this->absences->contains($absence)) {
+            $this->absences[] = $absence;
+        }
+
+        return $this;
+    }
+
+    public function removeAbsence(Eleve $absence): self
+    {
+        $this->absences->removeElement($absence);
 
         return $this;
     }

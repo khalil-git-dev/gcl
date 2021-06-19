@@ -7,7 +7,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ * collectionOperations={
+ *    "get"},
+ *   normalizationContext={"groups"={"classe"}},)
  * @ORM\Entity(repositoryClass=ClasseRepository::class)
  */
 
@@ -17,16 +20,19 @@ class Classe
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"classe"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=30)
+     * @Groups({"classe"})
      */
     private $libelleCl;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"discipline"})
      */
     private $descriptionCl;
 

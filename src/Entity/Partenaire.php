@@ -1,16 +1,15 @@
 <?php
 
 namespace App\Entity;
-
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\PartenaireRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ApiResource()
- * @ORM\Entity(repositoryClass=PartenaireRepository::class)
+ * @ORM\Entity
  */
 class Partenaire
 {
@@ -19,6 +18,7 @@ class Partenaire
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
+    
     private $id;
 
     /**
@@ -52,7 +52,8 @@ class Partenaire
     private $telPar;
 
     /**
-     * @ORM\OneToMany(targetEntity=Apport::class, mappedBy="partenaire", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Apport::class, mappedBy="partenaire", orphanRemoval=true, cascade={"persist"})
+     * @ApiSubresource
      */
     private $apport;
 

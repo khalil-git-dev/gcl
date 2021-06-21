@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Date;
 use App\Entity\Cours;
 use App\Entity\Salle;
+use App\Entity\Serie;
 use App\Entity\Classe;
+use App\Entity\Niveau;
 use App\Entity\Formateur;
 use App\Entity\Discipline;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,9 +18,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
- /**
-     * @Route("/api")
- */
+/**
+* @Route("/api")
+*/
 class OraganisationController extends AbstractController
 {
     private $tokenStorage;
@@ -27,14 +29,13 @@ class OraganisationController extends AbstractController
         $this->tokenStorage = $tokenStorage;
     }
     /**
-     * @Route("/oraganisation", name="oraganisation")
+     * @Route("/organiserCour", name="oraganisation" ,methods={"POST"})
      */
     public function organisationCour(EntityManagerInterface $entityManager,Request $request)
     {
        
         $values = json_decode($request->getContent());
         $cour=new Cours();
-        $class=new Classe();
         $date = new Date();
         $date->setDateDebut(new \DateTime());
         $date->setDateFin(new \DateTime());
@@ -45,7 +46,12 @@ class OraganisationController extends AbstractController
        //recupere le formateur
        $repofor= $this->getDoctrine()->getRepository(Formateur::class);
        $formateur=$repofor->find($values->formateur);
+
+        //recupere le formateur
+        $repoCl= $this->getDoctrine()->getRepository(Classe::class);
+        $classe=$repoCl->find($values->class);
       
+       
        // recupere sall
        $reposal= $this->getDoctrine()->getRepository(Salle::class);
        $salle=$reposal->find($values->sall);
@@ -60,32 +66,26 @@ class OraganisationController extends AbstractController
             ];
             return new JsonResponse($data, 401);      
            
-        }
-                $class->setLibelleCl($values->libelleC);
-                $class->setDescriptionCl($values->description);
-                $class->setNbMaxEleve($values->nbrEleve);
-                $class->setSerie($serie);
-                $class->setNiveau($niveau);
+        }      
 
-                $entityManager->persist($class);
-                $entityManager->flush();
+        //dd($cour);
+        $cour->setDetailCr($values->detail);
+        $cour->setLibelleCr($values->libelle);
+        $cour->setDureeCr($values->duree);
+        $cour->setDiscipline($matier);
+        $cour->setFormateur($formateur);
+        $cour->setSalle($salle);
+        $cour->addClasse($classe);
+        $entityManager->persist($cour);
+        $entityManager->flush();
+
+        $data = [
+            'status' => 201,
+            'message' => '  le cour organiser est  duree : '.$values->duree .'H'
+        ];
+        return new JsonResponse($data, 201);
+          
                 
-                //dd($cour);
-                $cour->setDetailCr($values->detail);
-                $cour->setLibelleCr($values->libelle);
-                $cour->setDureeCr($values->duree);
-                $cour->setDiscipline($matier);
-                $cour->setFormateur($formateur);
-                $cour->addClasse($values->class);
-                $cour->setSalle($salle);
-                $entityManager->persist($cour);
-                $entityManager->flush();
-
-                $data = [
-                    'status' => 201,
-                    'message' => ' le  cours a ete organiser' 
-                ];
-                return new JsonResponse($data, 201);
                 
     
     }

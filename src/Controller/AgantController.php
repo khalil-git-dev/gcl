@@ -86,10 +86,7 @@ public function addAgant(Request $request, EntityManagerInterface $entityManager
             ];
             return new JsonResponse($data, 401);
         }
-
-        
-        
-
+      
         $agant = new AgentSoins();
 
         // On décode les données envoyées

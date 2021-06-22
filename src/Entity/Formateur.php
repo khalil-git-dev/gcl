@@ -60,6 +60,7 @@ class Formateur
      */
     private $user;
 
+
     public function __construct()
     {
         $this->cours = new ArrayCollection();
@@ -183,4 +184,5 @@ class Formateur
 
         return $this;
     }
+
 }

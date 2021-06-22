@@ -47,32 +47,7 @@ class EmploiTempsController extends AbstractController
             return new JsonResponse($data, 401);
         }
      $values = json_decode($request->getContent());
-    // $jour = array('Dim.','Lun.','Mar.','Mer.','Jeu.','Ven.','Sam.');
-    // $mois = array('Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc');
-
-    // $date = date('G', $timestamp)."h ".date('i', $timestamp)."min ".$jour[date('w', $timestamp)]." "
-    //   .date('d', $timestamp)." ".$mois[date('m', $timestamp)-1]." ".date('Y', $timestamp);
-
-    //return $date;
-    // $period = new DatePeriod(
-    //     new DateTime("last monday midnight"),
-    //     new DateInterval('P1D'), // 1 jour
-    //     5 // 5 périodes/boucles
-    // );
-    //     foreach ($period as $classe) {
-    //         $classes[] = array(
-    //             "lundi"    => $classe,
-    //             "mardi" => $classe
-    //         );
-    //     }
     
-    // dd($period);
-    // $lundi = date('Y-m-d', mktime(0, 0, 0, date('m'), date('d')-date('N')+1, date('Y')));
-    // $mardi = date("Y-m-d", strtotime($lundi." +1 days"));
-    // $mercredi = date("Y-m-d", strtotime($lundi." +2 days"));
-    // $jeudi = date("Y-m-d", strtotime($lundi." +3 days"));
-    // $vendredi = date("Y-m-d", strtotime($lundi." +4 days"));
-    // dd($lundi);
     $cour = new Cours();
     $date = new Date();
     $date->setDateDebut(new \DateTime());
@@ -80,32 +55,40 @@ class EmploiTempsController extends AbstractController
     $date->setDateEmmission(new \DateTime());
     $entityManager->persist($date);
 
+    $inscription->getDate()->getDateDebut()->format('Y-m-d'));  
+            $date=explode('-', $inscription->getDate()->getDateDebut()->format('Y-m-d'));
+            $datejour  =  explode('-', Date('Y-m-d'));
+         if(date('d',mktime(0,0,0,$datejour[1],$datejour[2],$datejour[0])) == date('d',mktime(0,0,0,$date[1],$date[2],$date[0]))){
+         
         //recuper les matieres
         $repoMat=$this->getDoctrine()->getRepository(Discipline::class);
         $matier=$repoMat->find($values->discipline);     
        //recupere le formateur
-       $repofor= $this->getDoctrine()->getRepository(Formateur::class);
-    $formateur= $repofor->findBy(array(), array('typeFor' => 'ASC'), null, null);
-   
-    switch ($formateur[0]->getTypeFor()){
+       $formateur= $this->getDoctrine()->getRepository(Formateur::class)->find($values->formateur);
+    // $formateur= $repofor->findBy(array("typeFor" => "VOCATAIRE"), array('typeFor' => 'ASC'));
+//   dd($formateur);
+    switch ($formateur->getTypeFor()){
        
        case "VOCATAIRE":
-            $horaire= 21;
+            $horaire= 20;
             break;
        // dd($formateur);
        case "PROFESSEUR CONTRACTUEL":
-            # code...
+           $horaire= 25;
+            break;
+      case "PES":
+           $horaire= 21;
+           //dd($horaire);
+            break;
+      case "PCEM":
+           $horaire= 25;
             break;
        default:
             break;
         } 
-       // dd($formateur);
-   
-       //Affectation d'un formateur a un cours
-        //   $formateur =  $repofor->find($values->idformateur);
-        //   $classe = $repoClass->find($values->idClasse);
+       dd($formateur);
       
-       // recupere sall
+       // recupere salle
        $reposal= $this->getDoctrine()->getRepository(Salle::class);
        $salle=$reposal->find($values->salle);
         //dd($salle);
@@ -120,7 +103,7 @@ class EmploiTempsController extends AbstractController
        $cour->setLibelleCr($values->libelle);
        $cour->setDureeCr($values->duree);
        $cour->setDiscipline($matier);
-       $cour->setFormateur($formateur[0]->setTypeFor());
+       $cour->setFormateur($formateur);
        $cour->setDateCours($date);
        $cour->setSalle($salle);
        $entityManager->persist($cour);

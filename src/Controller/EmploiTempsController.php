@@ -55,8 +55,8 @@ class EmploiTempsController extends AbstractController
     $date->setDateEmmission(new \DateTime());
     $entityManager->persist($date);
 
-    $inscription->getDate()->getDateDebut()->format('Y-m-d'));  
-            $date=explode('-', $inscription->getDate()->getDateDebut()->format('Y-m-d'));
+    $cour->getDate()->getDateDebut()->format('Y-m-d');  
+            $date=explode('-', $cour->getDate()->getDateDebut()->format('Y-m-d'));
             $datejour  =  explode('-', Date('Y-m-d'));
          if(date('d',mktime(0,0,0,$datejour[1],$datejour[2],$datejour[0])) == date('d',mktime(0,0,0,$date[1],$date[2],$date[0]))){
          
@@ -116,4 +116,5 @@ class EmploiTempsController extends AbstractController
 
     }
  
+}
 }  

@@ -60,13 +60,10 @@ class Formateur
      */
     private $user;
 
-<<<<<<< HEAD
-=======
     /**
      * @ORM\OneToMany(targetEntity=Note::class, mappedBy="formateur")
      */
     private $notes;
->>>>>>> 13eca0ab7881c6c2242f707be6982265dcbb9598
 
     public function __construct()
     {
@@ -193,8 +190,6 @@ class Formateur
         return $this;
     }
 
-<<<<<<< HEAD
-=======
     /**
      * @return Collection|Note[]
      */
@@ -224,5 +219,4 @@ class Formateur
 
         return $this;
     }
->>>>>>> 13eca0ab7881c6c2242f707be6982265dcbb9598
 }

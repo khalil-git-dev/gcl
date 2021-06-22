@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\Serializer;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AgentSoinsRepository;
 use App\Entity\ServiceMedicale;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @Route("/api", name="api_")
@@ -85,10 +86,7 @@ public function addAgant(Request $request, EntityManagerInterface $entityManager
             ];
             return new JsonResponse($data, 401);
         }
-
-        
-        
-
+      
         $agant = new AgentSoins();
 
         // On décode les données envoyées

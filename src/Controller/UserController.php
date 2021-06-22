@@ -2,12 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\AgentSoins;
-use App\Entity\User;
-use App\Entity\Formateur;
 use App\Entity\Role;
+use App\Entity\User;
 use App\Entity\Censeur;
-use App\Entity\Surveillant;
+use App\Entity\Formateur;
 use App\Entity\Intendant;
 use App\Entity\ServiceMedicale;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,8 +15,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Mailjet\Resources;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
     /**
      * @Route("/api")
@@ -103,7 +101,20 @@ class UserController extends AbstractController
             $surveillent->setEmailSur($values->email);
             $surveillent->setUser($user);
             
-            $entityManager->persist($surveillent);
+            $entityManager->persist($surveillant);
+        }else if($libelle == "AGENT-SOINS"){
+
+            $agentSoins = new AgentSoins();
+            $serviceMedRole = $this->getDoctrine()->getRepository(ServiceMedicale::class);
+        
+            $agentSoins->setNomCompletAgent($values->prenom." ".$values->nom);
+            $agentSoins->setServiceMed($serviceMedRole->find($values->service));
+            $agentSoins->setTypeAgt($values->typeAgent);
+            $agentSoins->setTelephoneAgt($values->telephone);
+            $agentSoins->setEmail($values->email);
+            $agentSoins->setUser($user);
+            
+            $entityManager->persist($agentSoins);
         }
         // else if($libelle == "AGENT-SOINS"){
 
@@ -118,7 +129,6 @@ class UserController extends AbstractController
             
         //     $entityManager->persist($agentSoins);
         // }
-        
         $entityManager->flush();
 
         // L'envoie de email pour la connexion des utilisateurs apres création

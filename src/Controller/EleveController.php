@@ -41,7 +41,7 @@ class EleveController extends AbstractController
 
         $values = json_decode($request->getContent());
         $reposEleve = $this->getDoctrine()->getRepository(Eleve::class);
-        $eleve = $reposEleve->find($id);
+        $eleve = $reposEleve->find($id);//pour le modification
         
         $classeRole = $this->getDoctrine()->getRepository(Classe::class);
         $classeEl = $classeRole->find($values->classe);

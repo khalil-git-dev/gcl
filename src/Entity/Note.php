@@ -45,6 +45,12 @@ class Note
      */
     private $evaluations;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Formateur::class, inversedBy="notes")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $formateur;
+
     public function __construct()
     {
         $this->evaluations = new ArrayCollection();
@@ -126,6 +132,18 @@ class Note
         if ($this->evaluations->removeElement($evaluation)) {
             $evaluation->removeNote($this);
         }
+
+        return $this;
+    }
+
+    public function getFormateur(): ?Formateur
+    {
+        return $this->formateur;
+    }
+
+    public function setFormateur(?Formateur $formateur): self
+    {
+        $this->formateur = $formateur;
 
         return $this;
     }

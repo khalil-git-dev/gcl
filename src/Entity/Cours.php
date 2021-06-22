@@ -2,12 +2,18 @@
 
 namespace App\Entity;
 
-use App\Repository\CoursRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CoursRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
+ * @ApiResource(
+ *  collectionOperations={
+ *    "get"},
+ *   normalizationContext={"groups"={"cours"}},)
  * @ORM\Entity(repositoryClass=CoursRepository::class)
  */
 class Cours
@@ -32,6 +38,7 @@ class Cours
     /**
      * @ORM\ManyToOne(targetEntity=Discipline::class, inversedBy="cours")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"discipline"})
      */
     private $discipline;
 
@@ -54,6 +61,7 @@ class Cours
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"cours"})
      */
     private $dureeCr;
 

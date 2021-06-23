@@ -80,7 +80,7 @@ class OraganisationController extends AbstractController
 
         $data = [
             'status' => 201,
-            'message' => '  la cour organiser la duree est: '.$values->duree .'H'
+            'message' => '  le cour organiser est  duree : '.$values->duree .'H'
         ];
         return new JsonResponse($data, 201);
           

@@ -57,6 +57,11 @@ class Evaluation
      */
     private $typeEvel;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $semestre;
+
     public function __construct()
     {
         $this->eleve = new ArrayCollection();
@@ -172,6 +177,18 @@ class Evaluation
     public function setTypeEvel(string $typeEvel): self
     {
         $this->typeEvel = $typeEvel;
+
+        return $this;
+    }
+
+    public function getSemestre(): ?int
+    {
+        return $this->semestre;
+    }
+
+    public function setSemestre(int $semestre): self
+    {
+        $this->semestre = $semestre;
 
         return $this;
     }

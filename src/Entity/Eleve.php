@@ -159,6 +159,11 @@ class Eleve
      */
     private $absences;
 
+    /**
+     * @ORM\Column(type="string", length=15)
+     */
+    private $matricule;
+
     public function __construct()
     {
         $this->etatEle = true;
@@ -593,6 +598,18 @@ class Eleve
         if ($this->absences->removeElement($absence)) {
             $absence->removeAbsence($this);
         }
+
+        return $this;
+    }
+
+    public function getMatricule(): ?string
+    {
+        return $this->matricule;
+    }
+
+    public function setMatricule(string $matricule): self
+    {
+        $this->matricule = $matricule;
 
         return $this;
     }

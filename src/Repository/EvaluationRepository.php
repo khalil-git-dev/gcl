@@ -23,12 +23,12 @@ class EvaluationRepository extends ServiceEntityRepository
     /**
      * @return Evaluation[] Returns an array of Evaluation objects
      */
-    public function findDevoirSemestreByDiscipline($typeEval, $semestre,  $discipline)
+    public function findEvaluationSemestreByDiscipline($semestre,  $discipline)
     {
         return $this->createQueryBuilder('e')
+            ->andWhere('e.semestre = :val2')
             ->andWhere('e.discipline = :val3')
-            // ->setParameter('val', $typeEval)
-            // ->setParameter('val2', $semestre)
+            ->setParameter('val2', $semestre)
             ->setParameter('val3', $discipline)
             ->orderBy('e.id', 'ASC')
             // ->setMaxResults(10)

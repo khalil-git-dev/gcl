@@ -19,21 +19,20 @@ class CoursRepository extends ServiceEntityRepository
         parent::__construct($registry, Cours::class);
     }
 
-    /**
-     * @return Cours[] Returns an array of Cours objects
-     */
-    public function findCoursByClasse($classeId)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.classe = :val')
-            ->groupBy('c.discipline')
-            ->setParameter('val', $classeId)
-            ->orderBy('c.id', 'ASC')
-            // ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
+    // /**
+    //  * @return Cours[] Returns an array of Cours objects
+    //  */
+    // public function findCoursByClasse($classeId)
+    // {
+    //     return $this->createQueryBuilder('c')
+    //         ->andWhere('val IN c.classe')
+    //         ->setParameter('val', $classeId)
+    //         ->orderBy('c.id', 'ASC')
+    //         ->groupBy('c.discipline')
+    //         ->getQuery()
+    //         ->getResult()
+    //     ;
+    // }
 
     /*
     public function findOneBySomeField($value): ?Cours

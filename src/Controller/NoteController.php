@@ -25,10 +25,10 @@ class NoteController extends AbstractController
     }
 
     /**
-     * @Route("/ajoutNoteEleve", name="ajoutNoteEleve", methods={"POST"})
+     * @Route("/repporterNoteEleve", name="repporterNoteEleve", methods={"POST"})
      */
 
-    public function ajoutNoteEleve(Request $request, EntityManagerInterface $entityManager, GetteurController $getter)
+    public function repporterBulletinEleveNoteEleve(Request $request, EntityManagerInterface $entityManager, GetteurController $getter)
     {
         $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
         if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_FORMATEUR")) {
@@ -46,7 +46,7 @@ class NoteController extends AbstractController
             $reposEleve = $this->getDoctrine()->getRepository(Eleve::class);
             $eleve = $reposEleve->find($eleveId);
             $dossierScolaire = $eleve->getDossiers()[0];
-            $bulletin = $eleve->getDossiers()[0]->getBulletins()[0];
+            $bulletin = $eleve->getBulletins()[0];
             #####   creation du bulletin s'il n'existe pas encore    #####
             if(!$bulletin){
                 $bulletin = new Bulletin();
@@ -63,7 +63,7 @@ class NoteController extends AbstractController
             $note->setValeurNot($values->notes[$key]);
             $note->setAppreciation("Peut mieux faire");
             $note->setProportionaliteNot(4);
-            $note->setBulletin($bulletin);
+            $note->setBulletin($bulletin); 
             $note->setFormateur($getter->getFormateur());
             $entityManager->persist($note);
             #####   Update evaluation   #####

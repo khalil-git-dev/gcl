@@ -33,7 +33,7 @@ class OraganisationController extends AbstractController
      */
     public function organisationCour(EntityManagerInterface $entityManager,Request $request)
     {
-       
+
         $values = json_decode($request->getContent());
         $cour=new Cours();
         $date = new Date();
@@ -68,7 +68,6 @@ class OraganisationController extends AbstractController
            
         }      
 
-        //dd($cour);
         $cour->setDetailCr($values->detail);
         $cour->setLibelleCr($values->libelle);
         $cour->setDureeCr($values->duree);

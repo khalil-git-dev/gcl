@@ -78,9 +78,13 @@ class InscriptionController extends AbstractController
         ####    GENERATION DU NUMERO DE INSCRIPTION  ####
         $annee = Date('y');
         $cpt = $this->getLastInscription();
+        $lastIdEl = $this->getLastEleve();
         $long = strlen($cpt);
+        $longeur = strlen($lastIdEl);
         $NumInscription = str_pad("Ins-".$annee, 11-$long, "0").$cpt;
+        $matriculeEleve = str_pad("LK-".$annee, 11-$longeur, "0").$lastIdEl;
         #####    ELEVE  #####
+        $eleve->setMatricule($matriculeEleve);
         $eleve->setNomEle($values->nom);
         $eleve->setPrenomEle($values->prenom);
         $eleve->setDateNaissEle(new \DateTime($values->dateNaiss));
@@ -112,6 +116,7 @@ class InscriptionController extends AbstractController
 
         $entityManager->persist($dossier);
         #####    ACTIVITE  #####
+        $totalRedevance = 0;
         foreach($values->activites as $val)
         {
             $activite = new Activite();
@@ -119,7 +124,8 @@ class InscriptionController extends AbstractController
             $activite->setNatureAct($val->natureActiv);
             $activite->setTypeAct($val->typeActiv);
             $activite->setMontant($val->montant);
-            
+
+            $totalRedevance += $val->montant;
             $entityManager->persist($activite);
             $inscription->addActivite($activite);
         }
@@ -127,7 +133,7 @@ class InscriptionController extends AbstractController
         #####    INSCRIPTION  #####
         $inscription->setNumeroIns($NumInscription);
         $inscription->setLibelleIns($values->libelleIns);
-        $inscription->setRedevanceIns($values->redevance);
+        $inscription->setRedevanceIns($totalRedevance);
         $inscription->setCategorieIns($values->categorie);
         $inscription->setTypeIns($values->typeIns);
         $inscription->setDetailIns($values->detailIns);
@@ -147,6 +153,56 @@ class InscriptionController extends AbstractController
         return new JsonResponse($data, 201); 
     }
 
+     /**
+     * @Route("/inscrirePourUneActivite", name="inscrirePourUneActivite", methods={"POST"} )
+     */
+    public function inscrirePourUneActivite(Request $request, EntityManagerInterface $entityManager)
+    {
+        $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
+        if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR" || $rolesUser == "ROLE_INTENDANT")) {
+            $data = [
+                'status' => 401,
+                'message' => 'Vous n\'avez pas les droits pour effectuer cette operation'
+            ];
+            return new JsonResponse($data, 401);
+        }
+        $values = json_decode($request->getContent());
+        
+        $dossier = new Dossier();
+        $inscription = new Inscription();
+        $activite = new Activite();
+        $eleveRepo = $this->getDoctrine()->getRepository(Eleve::class);
+        $eleve = $eleveRepo->findOneBy(array("matricule" => $values->matriculeEleve));
+        // dd($inscriptionEleve = $eleve->getDossiers()[0]->getInscriptions()[0]->getActivite()[1]);
+        $inscriptionEleve = $eleve->getDossiers()[0]->getInscriptions()[0];
+            #####    ACTIVITE  #####
+            $totalRedevance = 0;
+            foreach($values->activites as $val)
+            {
+                $activite = new Activite();
+                $activite->setLibelleAct($val->libelleActiv);
+                $activite->setNatureAct($val->natureActiv);
+                $activite->setTypeAct($val->typeActiv);
+                $activite->setMontant($val->montant);
+
+                $totalRedevance += $val->montant;
+                $entityManager->persist($activite);
+                $inscriptionEleve->addActivite($activite);
+            }
+        
+        $inscriptionEleve->setRedevanceIns($inscriptionEleve->getRedevanceIns() + $totalRedevance);
+        $entityManager->persist($inscriptionEleve);
+        
+        $entityManager->flush();
+
+        
+        $data = [
+            'status' => 201,
+            'message' => "Une nouvelle inscription effectuée avec succes."
+        ];
+        return new JsonResponse($data, 201);
+    }
+
 
     public function getLastInscription(){
         $ripo = $this->getDoctrine()->getRepository(Inscription::class);
@@ -159,6 +215,17 @@ class InscriptionController extends AbstractController
         return $cpt;
     }
     
+    public function getLastEleve(){
+        $ripo = $this->getDoctrine()->getRepository(Eleve::class);
+        $compte = $ripo->findBy([], ['id'=>'DESC']);
+        if(!$compte){
+            $cpt = 1;
+        }else{
+            $cpt = ($compte[0]->getId()+1);
+        }
+        return $cpt;
+    }
+
     // Genegation de password alternative pour la premiere connexion user
     public function generedNumber($length)
     {

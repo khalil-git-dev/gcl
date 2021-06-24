@@ -4,15 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Eleve;
 use App\Entity\Classe;
+use App\Entity\Inscription;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-
 /**
  * @Route("/api")
  */
@@ -34,7 +31,7 @@ class EleveController extends AbstractController
 
         $values = json_decode($request->getContent());
         $reposEleve = $this->getDoctrine()->getRepository(Eleve::class);
-        $eleve = $reposEleve->find($id);
+        $eleve = $reposEleve->find($id);//pour le modification
         
         $classeRole = $this->getDoctrine()->getRepository(Classe::class);
         $classeEl = $classeRole->find($values->classe);
@@ -58,9 +55,7 @@ class EleveController extends AbstractController
         $eleve->setTelTuteurLeg($values->telTuteur);
         $eleve->setClasse($classeEl);
         $eleve->setNiveau($classeEl->getNiveau());
-        // $eleve->setUser($user);
-        // $eleve->setUserParent($user2);
-
+        
         $entityManager->persist($eleve);
         $entityManager->flush();
 
@@ -70,4 +65,53 @@ class EleveController extends AbstractController
         ];
         return new JsonResponse($data, 201); 
     }
+
+    /**
+     * @Route("/listEleveInscritBibliotheque", name="listEleveBibliothèque", methods={"GET"})
+     */
+    public function listEleveInscritBibliothèque()
+    {
+        $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
+        if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR" || $rolesUser == "ROLE_INTENDANT")) {
+            $data = [
+                'status' => 401,
+                'message' => 'Vous n\'avez pas les droits pour effectuer cette operation'
+            ];
+            return new JsonResponse($data, 401);
+        }
+        $reposInscripion = $this->getDoctrine()->getRepository(Inscription::class);
+        $inscrptions = $reposInscripion->findAll();
+        foreach($inscrptions as $inscrption)
+        {
+            foreach($inscrption->getActivite() as $activite)
+            {
+                if($activite->getTypeAct() == "Bibliotheque")
+                {
+                    $eleve = $inscrption->getDossier()->getEleve();
+                    $data[] = [
+                        "nom" => $eleve->getNomEle(),
+                        "prenom" => $eleve->getPrenomEle(),
+                        "dateNaissance" => $eleve->getDateNaissEle()->format('Y-m-d'),
+                        "lieuNaissance" => $eleve->getLieuNaissEle(),
+                        "sexe" => $eleve->getSexeEle(),
+                        "religion" => $eleve->getReligionEle(),
+                        "nationalite" => $eleve->getNationaliteElev(),
+                        "adresse" => $eleve->getAdresseEle(),
+                        "nomPere" => $eleve->getNomCompletPere(),
+                        "nomMere" => $eleve->getNomCompletMere(),
+                        "nomTuteur" => $eleve->getNomCompletTuteurLeg(),
+                        "telPere" => $eleve->getTelPere(),
+                        "telMere" => $eleve->getTelMere(),
+                        "telTuteur" => $eleve->getTelTuteurLeg(),
+                        "classe" => $eleve->getClasse()->getLibelleCl(),
+                        "niveau" => $eleve->getNiveau()->getLibelleNiv()
+                    ];
+                }
+            }
+        }
+        return new JsonResponse($data, 201);
+    }
+
+    
+
 }

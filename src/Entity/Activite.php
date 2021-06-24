@@ -41,6 +41,11 @@ class Activite
      */
     private $inscriptions;
 
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $montant;
+
     public function __construct()
     {
         $this->inscriptions = new ArrayCollection();
@@ -110,6 +115,18 @@ class Activite
         if ($this->inscriptions->removeElement($inscription)) {
             $inscription->removeActivite($this);
         }
+
+        return $this;
+    }
+
+    public function getMontant(): ?float
+    {
+        return $this->montant;
+    }
+
+    public function setMontant(float $montant): self
+    {
+        $this->montant = $montant;
 
         return $this;
     }

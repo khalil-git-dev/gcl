@@ -19,10 +19,23 @@ class ActiviteRepository extends ServiceEntityRepository
         parent::__construct($registry, Activite::class);
     }
 
-    // /**
-    //  * @return Activite[] Returns an array of Activite objects
-    //  */
-    /*
+    /**
+     * @return Activite[] Returns an array of Activite objects
+     */
+    public function apiFindAll() : array
+    {
+    $qb = $this->createQueryBuilder('a')
+        ->select('a.id', 'a.libelleAct', 'a.natureAct', 'a.typeAct','a.montant')
+        ->orderBy('a.id', 'ASC');
+
+    $query = $qb->getQuery();
+
+    return $query->execute();
+    }
+
+
+
+ /*
     public function findByExampleField($value)
     {
         return $this->createQueryBuilder('a')

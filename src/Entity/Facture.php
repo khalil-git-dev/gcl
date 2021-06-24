@@ -32,16 +32,6 @@ class Facture
     private $articleFac;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $quantiteFac;
-
-    /**
-     * @ORM\Column(type="float")
-     */
-    private $puFac;
-
-    /**
      * @ORM\Column(type="float")
      */
     private $montantFac;
@@ -67,6 +57,11 @@ class Facture
      * @ORM\OneToMany(targetEntity=Reglement::class, mappedBy="facture")
      */
     private $reglements;
+
+    /**
+     * @ORM\Column(type="string", length=15)
+     */
+    private $numeroFac;
 
     public function __construct()
     {
@@ -98,30 +93,6 @@ class Facture
     public function setArticleFac(string $articleFac): self
     {
         $this->articleFac = $articleFac;
-
-        return $this;
-    }
-
-    public function getQuantiteFac(): ?float
-    {
-        return $this->quantiteFac;
-    }
-
-    public function setQuantiteFac(?float $quantiteFac): self
-    {
-        $this->quantiteFac = $quantiteFac;
-
-        return $this;
-    }
-
-    public function getPuFac(): ?float
-    {
-        return $this->puFac;
-    }
-
-    public function setPuFac(float $puFac): self
-    {
-        $this->puFac = $puFac;
 
         return $this;
     }
@@ -200,6 +171,18 @@ class Facture
                 $reglement->setFacture(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNumeroFac(): ?string
+    {
+        return $this->numeroFac;
+    }
+
+    public function setNumeroFac(string $numeroFac): self
+    {
+        $this->numeroFac = $numeroFac;
 
         return $this;
     }

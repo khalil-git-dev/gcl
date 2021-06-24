@@ -6,8 +6,9 @@ use App\Repository\EvaluationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
+use ApiPlatform\Core\Annotation\ApiResource;
 /**
+ * @ApiResource()
  * @ORM\Entity(repositoryClass=EvaluationRepository::class)
  */
 class Evaluation

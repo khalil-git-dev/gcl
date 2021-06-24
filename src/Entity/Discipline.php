@@ -2,14 +2,18 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\DisciplineRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\DisciplineRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *  collectionOperations={
+ *    "get"},
+ *   normalizationContext={"groups"={"discipline"}},)
  * @ORM\Entity(repositoryClass=DisciplineRepository::class)
  */
 class Discipline
@@ -23,16 +27,19 @@ class Discipline
 
     /**
      * @ORM\Column(type="string", length=30)
+     * @Groups({"discipline"})
      */
     private $libelleDis;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"discipline"})
      */
     private $coefDis;
 
     /**
      * @ORM\OneToMany(targetEntity=Cours::class, mappedBy="discipline")
+     * @Groups({"cours"})
      */
     private $cours;
 

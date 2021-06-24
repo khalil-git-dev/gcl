@@ -25,17 +25,7 @@ class Partenaire
      * @ORM\Column(type="string", length=30)
      */
     private $typePart;
-
-    /**
-     * @ORM\Column(type="string", length=30)
-     */
-    private $nomPar;
-
-    /**
-     * @ORM\Column(type="string", length=50)
-     */
-    private $prenomPar;
-
+    
     /**
      * @ORM\Column(type="string", length=30)
      */
@@ -56,6 +46,11 @@ class Partenaire
      * @ApiSubresource
      */
     private $apport;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $nomComplet;
 
     public function __construct()
     {
@@ -79,29 +74,6 @@ class Partenaire
         return $this;
     }
 
-    public function getNomPar(): ?string
-    {
-        return $this->nomPar;
-    }
-
-    public function setNomPar(string $nomPar): self
-    {
-        $this->nomPar = $nomPar;
-
-        return $this;
-    }
-
-    public function getPrenomPar(): ?string
-    {
-        return $this->prenomPar;
-    }
-
-    public function setPrenomPar(string $prenomPar): self
-    {
-        $this->prenomPar = $prenomPar;
-
-        return $this;
-    }
 
     public function getCategoriePar(): ?string
     {
@@ -165,6 +137,18 @@ class Partenaire
                 $apport->setPartenaire(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNomComplet(): ?string
+    {
+        return $this->nomComplet;
+    }
+
+    public function setNomComplet(string $nomComplet): self
+    {
+        $this->nomComplet = $nomComplet;
 
         return $this;
     }

@@ -22,19 +22,17 @@ class CoursRepository extends ServiceEntityRepository
     // /**
     //  * @return Cours[] Returns an array of Cours objects
     //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+    // public function findCoursByClasse($classeId)
+    // {
+    //     return $this->createQueryBuilder('c')
+    //         ->andWhere('val IN c.classe')
+    //         ->setParameter('val', $classeId)
+    //         ->orderBy('c.id', 'ASC')
+    //         ->groupBy('c.discipline')
+    //         ->getQuery()
+    //         ->getResult()
+    //     ;
+    // }
 
     /*
     public function findOneBySomeField($value): ?Cours

@@ -154,6 +154,16 @@ class Eleve
      */
     private $userParent;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Cours::class, mappedBy="absences")
+     */
+    private $absences;
+
+    /**
+     * @ORM\Column(type="string", length=15)
+     */
+    private $matricule;
+
     public function __construct()
     {
         $this->etatEle = true;
@@ -162,6 +172,9 @@ class Eleve
         $this->bulletins = new ArrayCollection();
         $this->document = new ArrayCollection();
         $this->dossiers = new ArrayCollection();
+        $this->cours = new ArrayCollection();
+        $this->retards = new ArrayCollection();
+        $this->absences = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -561,4 +574,17 @@ class Eleve
 
         return $this;
     }
+    public function getMatricule(): ?string
+    {
+        return $this->matricule;
+    }
+
+    public function setMatricule(string $matricule): self
+    {
+        $this->matricule = $matricule;
+
+        return $this;
+    }
+
+    
 }

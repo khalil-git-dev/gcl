@@ -71,6 +71,7 @@ class EvaluationController extends AbstractController
     return $response;
     
     }
+    
     /**
      * @Route("/evaluation-ajout", name="evaluation" ,methods={"POST"})
      */
@@ -99,7 +100,7 @@ class EvaluationController extends AbstractController
          $evaluation ->setDetailEval($donnees->detailEval);
          $evaluation ->setDate($recudate);
          $evaluation ->setDiscipline($recudicipline);
-        
+         $evaluation ->setDiscipline($donnees->semestre);
 
         // On sauvegarde en base
         
@@ -132,18 +133,19 @@ class EvaluationController extends AbstractController
         $date= $this->getDoctrine()->getRepository(Date::class);
         $recudate = $date->find($donnees->id);
         $dicipline= $this->getDoctrine()->getRepository(Discipline::class);
-        $recudicipline = $dicipline->find($donnees->id);
+        $recudicipline = $dicipline->find($donnees->disciplineId);
 
         // On hydrate l'objet
-         $evaluation ->setLibelleEval($donnees->libelleEval);
-         $evaluation ->setDetailEval($donnees->detailEval);
-         $evaluation ->setDate($recudate);
-         $evaluation ->setDiscipline($recudicipline);
+        $evaluation ->setLibelleEval($donnees->libelleEval);
+        $evaluation ->setDetailEval($donnees->detailEval);
+        $evaluation ->setDate($recudate);
+        $evaluation ->setDiscipline($recudicipline);
+        $evaluation ->setTypeEvel($donnees->typeEvel);
+        $evaluation ->setSemestre($donnees->semestre);
         
-
         // On sauvegarde en base
         
-        $entityManager->persist($evaluation );
+        $entityManager->persist($evaluation);
         $entityManager->flush();
 
         // On retourne la confirmation

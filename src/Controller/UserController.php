@@ -11,7 +11,7 @@ use App\Entity\ServiceMedicale;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
-use Mailjet\Resources;
+use \Mailjet\Resources;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -130,7 +130,7 @@ class UserController extends AbstractController
             
         //     $entityManager->persist($agentSoins);
         // }
-        $entityManager->flush();
+            $entityManager->flush();
 
         // L'envoie de email pour la connexion des utilisateurs apres création
 
@@ -155,7 +155,7 @@ class UserController extends AbstractController
                 'Subject' => "Information de connexion.",
                 'TextPart' => "My first Mailjet email",
 
-                'HTMLPart' => "<h2>Bonjour $values->prenom,</h2><br />
+                'HTMLPart' => "<h2>Bonjour $values->prenom,</h2><br/>
                     <h4>
                         Pour vous connecter veuillez utiliser l'adresse email : <b> $emailUser </b>
                         <br />

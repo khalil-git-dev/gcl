@@ -246,4 +246,60 @@ public function removeArticle($id , Request $request ,EntityManagerInterface $en
      
               return new JsonResponse($data, 201); 
   }
+   /**
+   * @Route("/Activite/MontantCantine", name="MontantCantine" , methods={"GET"})
+   */
+  public function getMontantCantine(ActiviteRepository $activiteRepository)
+    {    
+        $sommeCantineEntrant =0;
+        $sommeCantineSortie = 0;
+        $montantCantine = 0;
+        $activites=  $activiteRepository->findBy(array('libelleAct'=> 'Cantine'));
+       
+        foreach($activites as  $activite){
+            if( $activite->getTypeAct() == "Entrant"){
+                $sommeCantineEntrant += $activite->getMontant();
+            }else{
+                $sommeCantineSortie += $activite->getMontant();  
+            }
+        }
+
+        $montantCantine= ($sommeCantineEntrant-$sommeCantineSortie);
+
+
+        $data = [
+            'entrant' => $sommeCantineEntrant,
+            'sortie' => $sommeCantineSortie,
+            'montant' => $montantCantine,
+        ];
+        return $this->json($data, 201);
+    }
+     /**
+   * @Route("/Activite/MontantTransport", name="MontantTransport" , methods={"GET"})
+   */
+  public function getMontantTransport(ActiviteRepository $activiteRepository)
+  {    
+      $sommeTransportEntrant =0;
+      $sommeTransportSortie = 0;
+      $montantTransport = 0;
+      $activites=  $activiteRepository->findBy(array('libelleAct'=> 'Transport'));
+     
+      foreach($activites as  $activite){
+          if( $activite->getTypeAct() == "Entrant"){
+              $sommeTransportEntrant += $activite->getMontant();
+          }else{
+              $sommeTransportSortie += $activite->getMontant();  
+          }
+      }
+
+      $montantTransport= ($sommeTransportEntrant-$sommeTransportSortie);
+
+
+      $data = [
+          'entrant' => $sommeTransportEntrant,
+          'sortie' => $sommeTransportSortie,
+          'montant' => $montantTransport,
+      ];
+      return $this->json($data, 201);
+  }
 }

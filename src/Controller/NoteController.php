@@ -44,7 +44,7 @@ class NoteController extends AbstractController
         
         foreach($values->eleves as $key => $eleveId){
             $reposEleve = $this->getDoctrine()->getRepository(Eleve::class);
-            $eleve = $reposEleve->find(2);
+            $eleve = $reposEleve->find($eleveId);
             $dossierScolaire = $eleve->getDossiers()[0];
             $bulletin = $eleve->getDossiers()[0]->getBulletins()[0];
             #####   creation du bulletin s'il n'existe pas encore    #####
@@ -60,20 +60,18 @@ class NoteController extends AbstractController
             }
             #####   creation de la note    #####
             $note = new Note();
-            $note->setValeurNot($values->notes[1]);
+            $note->setValeurNot($values->notes[$key]);
             $note->setAppreciation("Peut mieux faire");
             $note->setProportionaliteNot(4);
             $note->setBulletin($bulletin);
             $note->setFormateur($getter->getFormateur());
             $entityManager->persist($note);
-            //dd($note);
             #####   Update evaluation   #####
             $evaluation->addEleve($eleve);
             $evaluation->addNote($note);
             $entityManager->persist($evaluation);
             
             $entityManager->flush();
-            dd($note);
         }
         
         $data = [

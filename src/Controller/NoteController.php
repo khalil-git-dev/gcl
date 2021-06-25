@@ -16,6 +16,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 /**
  * @Route("/api")
  */
+
 class NoteController extends AbstractController
 {
     private $tokenStorage;
@@ -95,29 +96,28 @@ class NoteController extends AbstractController
         $data['date'] = $evaluation->getDate()->getDateDebut()->format('Y-m-d');
         #####   recuperation des eleves et leurs notes   #####
         foreach($evaluation->getEleve() as $key => $eleve){
-            $data[] = [
-                "eleves" => [
-                    "nom" => $eleve->getNomEle(),
-                    "prenom" => $eleve->getPrenomEle(),
-                    "dateNaissance" => $eleve->getDateNaissEle()->format('Y-m-d'),
-                    "lieuNaissance" => $eleve->getLieuNaissEle(),
-                    "sexe" => $eleve->getSexeEle(),
-                    "religion" => $eleve->getReligionEle(),
-                    "nationalite" => $eleve->getNationaliteElev(),
-                    "adresse" => $eleve->getAdresseEle(),
-                    "nomPere" => $eleve->getNomCompletPere(),
-                    "nomMere" => $eleve->getNomCompletMere(),
-                    "nomTuteur" => $eleve->getNomCompletTuteurLeg(),
-                    "telPere" => $eleve->getTelPere(),
-                    "telMere" => $eleve->getTelMere(),
-                    "telTuteur" => $eleve->getTelTuteurLeg(),
-                    "classe" => $eleve->getClasse()->getLibelleCl(),
-                    "niveau" => $eleve->getNiveau()->getLibelleNiv(),
-                    #####   La note de l'eleve   #####
-                    "noteEvaluation" => $evaluation->getNote()[$key]->getValeurNot()
-                ],
+            $tabEleves[] = [
+                "nom" => $eleve->getNomEle(),
+                "prenom" => $eleve->getPrenomEle(),
+                "dateNaissance" => $eleve->getDateNaissEle()->format('Y-m-d'),
+                "lieuNaissance" => $eleve->getLieuNaissEle(),
+                "sexe" => $eleve->getSexeEle(),
+                "religion" => $eleve->getReligionEle(),
+                "nationalite" => $eleve->getNationaliteElev(),
+                "adresse" => $eleve->getAdresseEle(),
+                "nomPere" => $eleve->getNomCompletPere(),
+                "nomMere" => $eleve->getNomCompletMere(),
+                "nomTuteur" => $eleve->getNomCompletTuteurLeg(),
+                "telPere" => $eleve->getTelPere(),
+                "telMere" => $eleve->getTelMere(),
+                "telTuteur" => $eleve->getTelTuteurLeg(),
+                "classe" => $eleve->getClasse()->getLibelleCl(),
+                "niveau" => $eleve->getNiveau()->getLibelleNiv(),
+                #####   La note de l'eleve   #####
+                "noteEvaluation" => $evaluation->getNote()[$key]->getValeurNot()
             ];
         }
+        $data["eleves"] =$tabEleves;
         return new JsonResponse($data, 201);
     }
 

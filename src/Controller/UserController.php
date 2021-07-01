@@ -361,7 +361,7 @@ class UserController extends AbstractController
 
 
     
-    // Genegation de password alternative pour la premiere connexion user
+    // Generation de password alternative pour la premiere connexion user
     public function passwordGenered($length)
     {
         $tab_match = [];

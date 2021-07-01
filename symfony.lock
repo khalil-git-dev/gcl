@@ -174,14 +174,8 @@
     "nikic/php-parser": {
         "version": "v4.10.4"
     },
-    "phenx/php-font-lib": {
-        "version": "0.5.2"
-    },
-    "phenx/php-svg-lib": {
-        "version": "v0.3.3"
-    },
     "php": {
-        "version": "7.2"
+        "version": "7.4"
     },
     "phpdocumentor/reflection-common": {
         "version": "2.2.0"

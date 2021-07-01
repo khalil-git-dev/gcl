@@ -38,28 +38,54 @@ class LivreController extends AbstractController
             return new JsonResponse($data, 401);
         }
     $eleve = $this->getDoctrine()->getRepository(Eleve::class)->find($idEleve);
-    foreach($eleve->getDossiers([0]) as $bultin){
+        $data = [];
+
+                 $data["nom"] = $eleve->getNomEle();
+                 $data["prenom"] = $eleve->getPrenomEle();
+                 $data["dateNaissance"] = $eleve->getDateNaissEle()->format('Y-m-d');
+                 $data["lieuNaissance"] = $eleve->getLieuNaissEle();
+                 $data["sexe"] = $eleve->getSexeEle();
+                 $data["religion" ]= $eleve->getReligionEle();
+                 $data["nationalite"] = $eleve->getNationaliteElev();
+                 $data["adresse"]= $eleve->getAdresseEle();
+                 $data["nomPere"]= $eleve->getNomCompletPere();
+                 $data["nomMere"]= $eleve->getNomCompletMere();
+                 $data ["nomTuteur" ]= $eleve->getNomCompletTuteurLeg();
+                 $data["telPere"]= $eleve->getTelPere();
+                 $data["telMere"]= $eleve->getTelMere();
+                 $data["telTuteur"]= $eleve->getTelTuteurLeg();
+                 $data["classe"]= $eleve->getClasse()->getLibelleCl();
+                 $data["niveau"]=$eleve->getNiveau()->getLibelleNiv();
     
-        $data=[];
-        $data["id"] = $bultin->getId();  
-        $data["libelleDos"] = $bultin->getLibelleDos();   
-        $data["typeDos"] = $bultin->getTypeDos();
-        $data["detailDos"] = $bultin->getDetailDos();
-        foreach($eleve->getBulletins([0])as $dossier){
+    foreach($eleve->getDossiers([0]) as $dossier){
+    
+        $data[]=[
+            
+        [
+        "id" => $dossier->getId(), 
+        "libelleDos" => $dossier->getLibelleDos(), 
+        "typeDos" => $dossier->getTypeDos(),
+        "detailDos" => $dossier->getDetailDos(),
+
+          ],
+        ];
+    }
+        foreach($eleve->getBulletins([0])as $bultin){
             $data[] = [
-                "bulletins" => [
-                    "id" => $dossier-> getId(),
-                    "libelleBul" => $dossier->getLibelleBul(),
-                    "typeBul" => $dossier->getTypeBul(),
-                    "categorieBul" => $dossier->getCategorieBul(),
-                    "detailBul" => $dossier->getDetailBul(),
+                 [
+                    "id" =>  $bultin-> getId(),
+                    "libelleBul" =>  $bultin->getLibelleBul(),
+                    "typeBul" =>  $bultin->getTypeBul(),
+                    "categorieBul" =>  $bultin->getCategorieBul(),
+                    "detailBul" =>  $bultin->getDetailBul(),
+                   // "libelleSerMed"=> $bultin->getServiceMed(),
     
                    
                 ],
             ];
         }
 
-    }
+    
     return new JsonResponse($data, 201);
 
 }

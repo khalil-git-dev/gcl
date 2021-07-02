@@ -11,7 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class MaterielController extends AbstractController
 {
     /**
-     * @Route("api/materiel/chaises", name="chaises")
+     * @Route("/materiel/chaises", name="chaises")
      */
     public function getNbreChaise(MaterielRepository $materielRepository)
     { 
@@ -28,5 +28,21 @@ class MaterielController extends AbstractController
             return $this->json($data, 201);
     }
 
-    
+    /**
+     * @Route("api/materiel/tableBanc", name="tableBanc")
+     */
+    public function getNbreTableBanc(MaterielRepository $materielRepository)
+    { 
+        $sommeMateriel=0;
+        $materiels=  $materielRepository->findBy(array('typeMat'=> 'table banc'));
+        foreach($materiels as  $materiel){
+            $sommeMateriel += $materiel->getNombre();
+            }
+        
+            $data = [
+        
+                'nombre' => $sommeMateriel
+            ];
+            return $this->json($data, 201);
+    }
 }

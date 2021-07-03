@@ -2,13 +2,15 @@
 
 namespace App\Controller;
 
-use App\Controller\InscriptionController;
+use App\Entity\Cours;
 use App\Entity\Eleve;
 use App\Entity\Formateur;
-use App\Entity\Cours;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\ApportRepository;
+use App\Repository\ActiviteRepository;
+use App\Controller\InscriptionController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @Route("/api")
@@ -86,5 +88,18 @@ class GetteurController extends AbstractController
         return $mention;
     }
 
+  /**
+   * @Route("/MontantGlobal", name="MontantGlobal" , methods={"GET"})
+   */
+  public function getMontantGlobal(ActiviteRepository $activiteRepository,ApportRepository $apportRepository)
+  {    
+    $montantTransport = 0;
+    $montantCaisse = 0;
+    $montantCantine = 0;
+    $montantGlobal = 0;
+
+     $montantGlobal=($montantCaisse + $montantTransport + $montantCantine);
+      return($montantGlobal);
+  }
 
 }

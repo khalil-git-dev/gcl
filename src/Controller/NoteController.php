@@ -43,7 +43,6 @@ class NoteController extends AbstractController
         $reposEvaluation = $this->getDoctrine()->getRepository(Evaluation::class);
         $reposEleve = $this->getDoctrine()->getRepository(Eleve::class);
         $evaluation = $reposEvaluation->find($values->evaluation);
-
         foreach($values->eleves as $key => $eleveId){
             $eleve = $reposEleve->find($eleveId);
             $dossierScolaire = $eleve->getDossiers()[0];

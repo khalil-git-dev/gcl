@@ -574,34 +574,6 @@ class Eleve
 
         return $this;
     }
-
-    /**
-     * @return Collection|Cours[]
-     */
-    public function getAbsences(): Collection
-    {
-        return $this->absences;
-    }
-
-    public function addAbsence(Cours $absence): self
-    {
-        if (!$this->absences->contains($absence)) {
-            $this->absences[] = $absence;
-            $absence->addAbsence($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAbsence(Cours $absence): self
-    {
-        if ($this->absences->removeElement($absence)) {
-            $absence->removeAbsence($this);
-        }
-
-        return $this;
-    }
-
     public function getMatricule(): ?string
     {
         return $this->matricule;

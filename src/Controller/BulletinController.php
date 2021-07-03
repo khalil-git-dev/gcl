@@ -6,6 +6,7 @@ use App\Entity\Discipline;
 use App\Entity\Eleve;
 use App\Entity\Evaluation;
 use App\Entity\Note;
+// use App\Controller\PdfController;
 use App\Entity\Classe;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -15,10 +16,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 /**
  * @Route("/api")
  */
-
 class BulletinController extends AbstractController
 {
     private $tokenStorage;
@@ -40,7 +41,7 @@ class BulletinController extends AbstractController
     /**
      * @Route("/generedBulletinEleveParSemestre", name="generedBulletinEleveParSemestre", methods={"POST"})
      */
-    public function generedBulletinEleveParSemestre(Request $request, EntityManagerInterface $entityManager, GetteurController $getter)
+    public function generedBulletinEleveParSemestre(Request $request, EntityManagerInterface $entityManager, GetteurController $getter, PdfController $pdf)
     {
         $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
         if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_CENSEUR")) {
@@ -65,9 +66,11 @@ class BulletinController extends AbstractController
             "lieuNaissance" => $eleve->getLieuNaissEle(),
         ];
         $tableauEleve =[];
+        $tabNotes =[];
         #####    Recupration des discipines fait par une classe   #####
         $allDisciplinesClasse = $getter->getDisciplinesClasse($eleve->getClasse()->getId());
         foreach($eleve->getClasse()->getEleve() as $eleve){
+            $tabNotes =[];
             $sommeCoef = 0;
             $sommesNotesCoef = 0;
             foreach($allDisciplinesClasse as $discip){
@@ -77,12 +80,15 @@ class BulletinController extends AbstractController
                 $noteComposition = 0; $noteControlContinue = 0;
 
                 if($evaluations){
+                    $nbDevoir = 0;
                     foreach($evaluations as $key => $evaluation){
                         foreach($evaluation->getNote() as $key => $note){
                             // Si le note appartient a l'eleve
                             if($note->getBulletin() == $eleve->getBulletins()[0]){
                                 if($evaluation->getTypeEvel() == "Devoir"){
+                                    $nbDevoir ++;
                                     // La somme des devoirs
+                                    $tabNotes[] =  $note->getValeurNot();
                                     $sommeDevoire += $note->getValeurNot();
                                 }else if($evaluation->getTypeEvel() == "Composition"){
                                     $noteComposition = $note->getValeurNot();
@@ -91,19 +97,21 @@ class BulletinController extends AbstractController
                         }
                     }
                     //Calcule du cumuls des devoirs divisé par nombre de devoir
-                    $noteControlContinue = ($sommeDevoire / count($evaluations));
+                    $noteControlContinue = ($sommeDevoire / $nbDevoir);
                     $noteSemestriel = ($noteControlContinue + $noteComposition) / 2;
                 }
                 if($eleve->getId() == $values->idEleve){ 
-                $data[] = [
-                    "discipline" => $discip->getLibelleDis(),
-                    "coefDiscipline" => $discip->getCoefDis(),
-                    "noteCC" =>  $noteControlContinue,
-                    "noteCompo" => $noteComposition,
-                    "noteSemestre" => $noteSemestriel
-                ];
+                    $data[] = [
+                        "discipline" => $discip->getLibelleDis(),
+                        "coefDiscipline" => $discip->getCoefDis(),
+                        "devoirs" => $tabNotes,
+                        "noteCC" => round($noteControlContinue, 2), // arrondit
+                        "noteCompo" => $noteComposition,
+                        "noteSemestre" => round($noteSemestriel, 2) // arrondit
+                    ];
                 }
-                $sommesNotesCoef += ($discip->getCoefDis() * $noteSemestriel);
+                $sommesNotesCoef += round(($discip->getCoefDis() * $noteSemestriel), 2);
+                $tabNotes =[];
             }
             if($eleve->getId() == $values->idEleve){  
                 $donneeBulletinEleve['disciplineNote'] = $data;
@@ -132,6 +140,7 @@ class BulletinController extends AbstractController
         //Savoir la position (Rang) de l'eleve dans le tableau de moyenne.
         $donneeBulletinEleve['rang'] = $getter->getRangEleve($tableauEleve, $values->idEleve);
         
+        // $pdf->generedBulletin($donneeBulletinEleve);
         return new JsonResponse($donneeBulletinEleve, 201);
     }
 

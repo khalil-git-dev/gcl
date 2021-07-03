@@ -33,7 +33,6 @@ class RecuController extends AbstractController
         
         // Instantiate Dompdf with our options
         $dompdf = new Dompdf($pdfOptions);
-        // dd($reglemnet->getFacture()->getInscription()->getActivite());
         // Retrieve the HTML generated in our twig file
         $html = $this->renderView('recu/recu.html.twig', [
             'reglemnet' => $reglemnet,
@@ -59,4 +58,6 @@ class RecuController extends AbstractController
         ]);
  
     }
+
+
 }

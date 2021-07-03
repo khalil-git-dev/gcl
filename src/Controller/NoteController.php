@@ -28,7 +28,6 @@ class NoteController extends AbstractController
     /**
      * @Route("/repporterNoteEleve", name="repporterNoteEleve", methods={"POST"})
      */
-
     public function repporterBulletinEleveNoteEleve(Request $request, EntityManagerInterface $entityManager, GetteurController $getter)
     {
         $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
@@ -40,10 +39,12 @@ class NoteController extends AbstractController
             return new JsonResponse($data, 401);
         }
         $values = json_decode($request->getContent());
+
         $reposEvaluation = $this->getDoctrine()->getRepository(Evaluation::class);
+        $reposEleve = $this->getDoctrine()->getRepository(Eleve::class);
         $evaluation = $reposEvaluation->find($values->evaluation);
+
         foreach($values->eleves as $key => $eleveId){
-            $reposEleve = $this->getDoctrine()->getRepository(Eleve::class);
             $eleve = $reposEleve->find($eleveId);
             $dossierScolaire = $eleve->getDossiers()[0];
             $bulletin = $eleve->getBulletins()[0];
@@ -121,6 +122,12 @@ class NoteController extends AbstractController
         return new JsonResponse($data, 201);
     }
 
-
+    /**
+     * @Route("/visualiserNoteEleve", name="noteEleveParEvaluation", methods={"GET"})
+     */
+    public function visualiserNoteEleve($idEvaluation, Request $request)
+    {
+        // $values = json_decode($request->getContent());
+    }
 
 }

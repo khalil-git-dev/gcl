@@ -76,7 +76,8 @@ class FactureController extends AbstractController
             'message' => "Fature generé avec succes."
         ];
         return new JsonResponse($data, 201);
-    }        
+    }
+
 
 
     public function getLastFacture(){
@@ -88,5 +89,6 @@ class FactureController extends AbstractController
             $cpt = ($compte[0]->getId()+1);
         }
         return $cpt;
-      }
+    }
+
 }

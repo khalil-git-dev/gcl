@@ -164,6 +164,11 @@ class Eleve
      */
     private $matricule;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Assister::class, mappedBy="eleve")
+     */
+    private $assisters;
+
     public function __construct()
     {
         $this->etatEle = true;
@@ -175,6 +180,7 @@ class Eleve
         $this->cours = new ArrayCollection();
         $this->retards = new ArrayCollection();
         $this->absences = new ArrayCollection();
+        $this->assisters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -582,6 +588,36 @@ class Eleve
     public function setMatricule(string $matricule): self
     {
         $this->matricule = $matricule;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Assister[]
+     */
+    public function getAssisters(): Collection
+    {
+        return $this->assisters;
+    }
+
+    public function addAssister(Assister $assister): self
+    {
+        if (!$this->assisters->contains($assister)) {
+            $this->assisters[] = $assister;
+            $assister->setEleve($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssister(Assister $assister): self
+    {
+        if ($this->assisters->removeElement($assister)) {
+            // set the owning side to null (unless already changed)
+            if ($assister->getEleve() === $this) {
+                $assister->setEleve(null);
+            }
+        }
 
         return $this;
     }

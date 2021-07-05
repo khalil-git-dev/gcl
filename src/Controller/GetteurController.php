@@ -48,7 +48,44 @@ class GetteurController extends AbstractController
                 }
             }
         }
-        return array_unique($disciplineClasse,SORT_REGULAR);
+        return array_unique($disciplineClasse, SORT_REGULAR);
+    }
+
+    public function getRangEleve($tableauEleve, $idEleve){
+
+        foreach($tableauEleve as $key => $row) {
+            if($row['eleveId'] == $idEleve){
+                return $key+1;
+            }
+        }
+        return null;
+    }
+
+    public function getMentionRang($moyenne){
+        $mention = '';
+        switch($moyenne){
+            case $moyenne >= 19 :
+                $mention = "Excellent";
+                break;
+            case $moyenne >= 17 :
+                $mention = "Tres-bien";
+                break;
+            case $moyenne >= 14 :
+                $mention = "Bien";
+                break;
+            case $moyenne >= 12 :
+                $mention = "Assez-bien";
+                break;
+            case $moyenne >= 10 :
+                $mention = "Passable";
+                break;
+            case $moyenne < 10 :
+                $mention = "Insuffisant";
+                break;          
+            default:
+                break;
+        }
+        return $mention;
     }
 
   /**

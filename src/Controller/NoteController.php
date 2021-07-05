@@ -16,6 +16,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 /**
  * @Route("/api")
  */
+
 class NoteController extends AbstractController
 {
     private $tokenStorage;
@@ -27,7 +28,6 @@ class NoteController extends AbstractController
     /**
      * @Route("/repporterNoteEleve", name="repporterNoteEleve", methods={"POST"})
      */
-
     public function repporterBulletinEleveNoteEleve(Request $request, EntityManagerInterface $entityManager, GetteurController $getter)
     {
         $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
@@ -39,11 +39,11 @@ class NoteController extends AbstractController
             return new JsonResponse($data, 401);
         }
         $values = json_decode($request->getContent());
+
         $reposEvaluation = $this->getDoctrine()->getRepository(Evaluation::class);
+        $reposEleve = $this->getDoctrine()->getRepository(Eleve::class);
         $evaluation = $reposEvaluation->find($values->evaluation);
-        
         foreach($values->eleves as $key => $eleveId){
-            $reposEleve = $this->getDoctrine()->getRepository(Eleve::class);
             $eleve = $reposEleve->find($eleveId);
             $dossierScolaire = $eleve->getDossiers()[0];
             $bulletin = $eleve->getBulletins()[0];
@@ -96,32 +96,37 @@ class NoteController extends AbstractController
         $data['date'] = $evaluation->getDate()->getDateDebut()->format('Y-m-d');
         #####   recuperation des eleves et leurs notes   #####
         foreach($evaluation->getEleve() as $key => $eleve){
-            $data[] = [
-                "eleves" => [
-                    "nom" => $eleve->getNomEle(),
-                    "prenom" => $eleve->getPrenomEle(),
-                    "dateNaissance" => $eleve->getDateNaissEle()->format('Y-m-d'),
-                    "lieuNaissance" => $eleve->getLieuNaissEle(),
-                    "sexe" => $eleve->getSexeEle(),
-                    "religion" => $eleve->getReligionEle(),
-                    "nationalite" => $eleve->getNationaliteElev(),
-                    "adresse" => $eleve->getAdresseEle(),
-                    "nomPere" => $eleve->getNomCompletPere(),
-                    "nomMere" => $eleve->getNomCompletMere(),
-                    "nomTuteur" => $eleve->getNomCompletTuteurLeg(),
-                    "telPere" => $eleve->getTelPere(),
-                    "telMere" => $eleve->getTelMere(),
-                    "telTuteur" => $eleve->getTelTuteurLeg(),
-                    "classe" => $eleve->getClasse()->getLibelleCl(),
-                    "niveau" => $eleve->getNiveau()->getLibelleNiv(),
-                    #####   La note de l'eleve   #####
-                    "noteEvaluation" => $evaluation->getNote()[$key]->getValeurNot()
-                ],
+            $tabEleves[] = [
+                "nom" => $eleve->getNomEle(),
+                "prenom" => $eleve->getPrenomEle(),
+                "dateNaissance" => $eleve->getDateNaissEle()->format('Y-m-d'),
+                "lieuNaissance" => $eleve->getLieuNaissEle(),
+                "sexe" => $eleve->getSexeEle(),
+                "religion" => $eleve->getReligionEle(),
+                "nationalite" => $eleve->getNationaliteElev(),
+                "adresse" => $eleve->getAdresseEle(),
+                "nomPere" => $eleve->getNomCompletPere(),
+                "nomMere" => $eleve->getNomCompletMere(),
+                "nomTuteur" => $eleve->getNomCompletTuteurLeg(),
+                "telPere" => $eleve->getTelPere(),
+                "telMere" => $eleve->getTelMere(),
+                "telTuteur" => $eleve->getTelTuteurLeg(),
+                "classe" => $eleve->getClasse()->getLibelleCl(),
+                "niveau" => $eleve->getNiveau()->getLibelleNiv(),
+                #####   La note de l'eleve   #####
+                "noteEvaluation" => $evaluation->getNote()[$key]->getValeurNot()
             ];
         }
+        $data["eleves"] =$tabEleves;
         return new JsonResponse($data, 201);
     }
 
-
+    /**
+     * @Route("/visualiserNoteEleve", name="noteEleveParEvaluation", methods={"GET"})
+     */
+    public function visualiserNoteEleve($idEvaluation, Request $request)
+    {
+        // $values = json_decode($request->getContent());
+    }
 
 }

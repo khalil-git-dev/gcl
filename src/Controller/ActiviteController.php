@@ -70,8 +70,8 @@ class ActiviteController extends AbstractController
         
     }
     /**
- * @Route("/activiter/ajout", name="ajout", methods={"POST"})
- */
+     * @Route("/activiter/ajout", name="ajout", methods={"POST"})
+     */
 public function addActiviter(Request $request, EntityManagerInterface $entityManager) 
 {
     $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];

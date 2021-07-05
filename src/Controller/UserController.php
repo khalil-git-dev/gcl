@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Role;
+use App\Entity\Surveillant;
 use App\Entity\User;
 use App\Entity\Censeur;
 use App\Entity\Formateur;

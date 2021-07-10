@@ -16,7 +16,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 /**
  * @Route("/api")
  */
-
 class NoteController extends AbstractController
 {
     private $tokenStorage;

@@ -49,8 +49,8 @@ class ConsultationEleveController extends AbstractController
                     $data = [
                         'status' => 400,
                         'message' => 'cett eleve n\est pas un  '.$type
-                        ];
-                        return new JsonResponse($data, 200);   
+                    ];
+                    return new JsonResponse($data, 200);   
                    
                 }  
                 $detail=$bulletin->setDetailBul('cette'.$valus->detail ); 

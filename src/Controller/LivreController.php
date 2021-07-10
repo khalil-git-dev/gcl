@@ -52,9 +52,7 @@ class LivreController extends AbstractController
                     "libelleBul" => $dossier->getLibelleBul(),
                     "typeBul" => $dossier->getTypeBul(),
                     "categorieBul" => $dossier->getCategorieBul(),
-                    "detailBul" => $dossier->getDetailBul(),
-    
-                   
+                    "detailBul" => $dossier->getDetailBul(),                   
                 ],
             ];
         }

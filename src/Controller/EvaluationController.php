@@ -29,52 +29,30 @@ class EvaluationController extends AbstractController
         $this->tokenStorage = $tokenStorage;
     }
 
+     /**
+      * @Route("/getAllevaluation", name="getevaluation", methods={"GET"})
+      */
+      public function getEvaluation(EvaluationRepository $repoevaluetion)
+      {
+          $evaluation =  $repoevaluetion->findAll();
+          
+          foreach($evaluation as $evelu){
+              $data[] = [
+                  'id' => $evelu->getId(),
+                  'libelleEval' => $evelu->getLibelleEval(),
+                  'detailEval' => $evelu->getDetailEval(),
+                  'discipline' => $evelu->getDiscipline(),
+                  'dateDebut' => $evelu->getDate()->getDateDebut(),
+                  'dateFin' => $evelu->getDate()->getDateFin(),
+              ];
+          }
+  
+          return $this->json($data, 201);
+      }
+    
  /**
-  * @Route("/getAllevaluation", name="getevaluation", methods={"GET"})
+  * @Route("/evaluation/ajout", name="ajout", methods={"POST"})
   */
-    public function liste(EvaluationRepository $evaluationrepo)
-    {
-        $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
-        if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_FORMATEUR")) {
-            $data = [
-                'status' => 401,
-                'message' => 'Vous n\'avez pas les droits pour effectuer cette operation'
-            ];
-            return new JsonResponse($data, 401);
-        }
-        // On récupère la liste des articles
-    $agant = $evaluationrepo->FindAll();
-
-    // On spécifie qu'on utilise l'encodeur JSON
-    $encoders = [new JsonEncoder()];
-
-    // On instancie le "normaliseur" pour convertir la collection en tableau
-    $normalizers = [new ObjectNormalizer()];
-
-    // On instancie le convertisseur
-    $serializer = new Serializer($normalizers, $encoders);
-
-    // On convertit en json
-    $jsonContent = $serializer->serialize($agant, 'json', [
-        'circular_reference_handler' => function ($object) {
-            return $object->getId();
-        }
-    ]);
-
-    // On instancie la réponse
-    $response = new Response($jsonContent);
-
-    // On ajoute l'entête HTTP
-    $response->headers->set('Content-Type', 'application/json');
-
-    // On envoie la réponse
-    return $response;
-    
-    }
-    
-    /**
-     * @Route("/evaluation-ajout", name="evaluation" ,methods={"POST"})
-     */
     public function addEvaluation(Request $request, EntityManagerInterface $entityManager )
     {
         $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
@@ -85,23 +63,30 @@ class EvaluationController extends AbstractController
             ];
             return new JsonResponse($data, 401);
         }
+        // On décode les données envoyées
+         
+        $date =  new Date();
+
+        $donnees = json_decode($request->getContent());
+        $date->setDateDebut(new \DateTime($donnees->dateDebut));
+        $date->setDateFin(new \DateTime($donnees->dateFin));
+        //$date->setDateEmmission($donnees->dateEmission);
+        $entityManager->persist($date);
+
         $evaluation = new Evaluation();
 
         // On décode les données envoyées
-        $donnees = json_decode($request->getContent());
-        
-        $date= $this->getDoctrine()->getRepository(Date::class);
-        $recudate = $date->find($donnees->id);
+       
         $dicipline= $this->getDoctrine()->getRepository(Discipline::class);
-        $recudicipline = $dicipline->find($donnees->id);
+        $recudicipline = $dicipline->find($donnees->discipline);
 
         // On hydrate l'objet
          $evaluation ->setLibelleEval($donnees->libelleEval);
          $evaluation ->setDetailEval($donnees->detailEval);
-         $evaluation ->setDate($recudate);
          $evaluation ->setDiscipline($recudicipline);
-         $evaluation ->setDiscipline($donnees->semestre);
-
+         $evaluation ->setSemestre($donnees->semestre);
+         $evaluation ->setTypeEvel($donnees->typeEvel);
+         $evaluation ->setDate($date);
         // On sauvegarde en base
         
         $entityManager->persist($evaluation );

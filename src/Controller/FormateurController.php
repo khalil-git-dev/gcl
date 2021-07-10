@@ -41,9 +41,7 @@ class FormateurController extends AbstractController
                 ];
             }
         }
-        // return $this->json($data, 201); 
         return new JsonResponse($data, 201);
     }
-
 
 }

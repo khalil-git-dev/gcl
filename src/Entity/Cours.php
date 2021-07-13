@@ -66,15 +66,9 @@ class Cours
     private $dureeCr;
 
     /**
-<<<<<<< HEAD
-     * @ORM\ManyToOne(targetEntity=Date::class, inversedBy="cours")
-     */
-    private $dateCours;
-=======
      * @ORM\OneToMany(targetEntity=Assister::class, mappedBy="cours")
      */
     private $assisters;
->>>>>>> cc829905fb39cf509ada66e50b5d258f0f8149b8
 
     public function __construct()
     {
@@ -183,7 +177,6 @@ class Cours
         return $this;
     }
 
-<<<<<<< HEAD
     public function getDateCours(): ?Date
     {
         return $this->dateCours;
@@ -192,28 +185,10 @@ class Cours
     public function setDateCours(?Date $dateCours): self
     {
         $this->dateCours = $dateCours;
-=======
-    /**
-     * @return Collection|Assister[]
-     */
-    public function getAssisters(): Collection
-    {
-        return $this->assisters;
-    }
-
-    public function addAssister(Assister $assister): self
-    {
-        if (!$this->assisters->contains($assister)) {
-            $this->assisters[] = $assister;
-            $assister->setCours($this);
-        }
->>>>>>> cc829905fb39cf509ada66e50b5d258f0f8149b8
 
         return $this;
     }
 
-<<<<<<< HEAD
-=======
     public function removeAssister(Assister $assister): self
     {
         if ($this->assisters->removeElement($assister)) {
@@ -227,5 +202,4 @@ class Cours
     }
 
 
->>>>>>> cc829905fb39cf509ada66e50b5d258f0f8149b8
 }

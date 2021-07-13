@@ -357,13 +357,9 @@ class UserController extends AbstractController
         return new JsonResponse($data, 201);
     }
 
-<<<<<<< HEAD
-    // Genegation de password alternative pour la premiere connexion user
-=======
 
     
     // Generation de password alternative pour la premiere connexion user
->>>>>>> cc829905fb39cf509ada66e50b5d258f0f8149b8
     public function passwordGenered($length)
     {
         $tab_match = [];

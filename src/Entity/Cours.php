@@ -70,11 +70,6 @@ class Cours
      */
     private $dateCours;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $suppleCr;
-
     public function __construct()
     {
         $this->classe = new ArrayCollection();
@@ -189,18 +184,6 @@ class Cours
     public function setDateCours(?Date $dateCours): self
     {
         $this->dateCours = $dateCours;
-
-        return $this;
-    }
-
-    public function getSuppleCr(): ?string
-    {
-        return $this->suppleCr;
-    }
-
-    public function setSuppleCr(?string $suppleCr): self
-    {
-        $this->suppleCr = $suppleCr;
 
         return $this;
     }

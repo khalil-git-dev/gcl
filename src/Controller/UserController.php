@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Role;
+use App\Entity\Surveillant;
 use App\Entity\User;
 use App\Entity\Censeur;
 use App\Entity\Formateur;
@@ -12,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
-use Mailjet\Resources;
+use \Mailjet\Resources;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -129,7 +130,7 @@ class UserController extends AbstractController
             
         //     $entityManager->persist($agentSoins);
         // }
-        $entityManager->flush();
+            $entityManager->flush();
 
         // L'envoie de email pour la connexion des utilisateurs apres création
 
@@ -154,7 +155,7 @@ class UserController extends AbstractController
                 'Subject' => "Information de connexion.",
                 'TextPart' => "My first Mailjet email",
 
-                'HTMLPart' => "<h2>Bonjour $values->prenom,</h2><br />
+                'HTMLPart' => "<h2>Bonjour $values->prenom,</h2><br/>
                     <h4>
                         Pour vous connecter veuillez utiliser l'adresse email : <b> $emailUser </b>
                         <br />
@@ -356,7 +357,13 @@ class UserController extends AbstractController
         return new JsonResponse($data, 201);
     }
 
+<<<<<<< HEAD
     // Genegation de password alternative pour la premiere connexion user
+=======
+
+    
+    // Generation de password alternative pour la premiere connexion user
+>>>>>>> cc829905fb39cf509ada66e50b5d258f0f8149b8
     public function passwordGenered($length)
     {
         $tab_match = [];

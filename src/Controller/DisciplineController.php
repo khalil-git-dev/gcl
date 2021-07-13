@@ -7,8 +7,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Controller\GetteurController;
 use App\Repository\CoursRepository;
 use App\Repository\DisciplineRepository;
+use App\Repository\ClasseRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
     /**
@@ -51,27 +53,40 @@ class DisciplineController extends AbstractController
     /**
      * @Route("/getProgressCours", name="getProgressCours", methods={"GET"})
      */
-    public function getProgressCours(EntityManagerInterface $entityManager, DisciplineRepository $repo)
+    public function getProgressCours(GetteurController $getter, ClasseRepository $classeRepo,
+        EntityManagerInterface $entityManager, DisciplineRepository $repoDiscipline)
     {
-        $disciplines = $repo->findAll();
-        foreach($disciplines as $discip){
-            $totalCours = 0;
-
-            if($discip->getCours()[0] != null){
-                $cours = $discip->getCours();
-                foreach($cours as $cr){
-                    $totalCours += $cr->getDureeCr();
+        $datas = [];
+        $allClasses = $classeRepo->findAll();
+        foreach($allClasses as $cl){
+            $data = [];
+            $classe = $cl->getLibelleCl();
+            $disciplines = $getter->getDisciplinesClasse($cl->getId());
+            foreach($disciplines as $discip){
+                $totalCours = 0;
+                if($discip->getCours()[0] != null){
+                    $cours = $discip->getCours();
+                    foreach($cours as $cr){
+                        $totalCours += $cr->getDureeCr();
+                    }
                 }
+                $data[] = [
+                    'id' => $discip->getId(),
+                    'discipline' => $discip->getLibelleDis(),
+                    'coefDiscip' => $discip->getCoefDis(),
+                    'quantumHoraire' => $discip->getQuantumHoraire(),
+                    'totalHoraire' => $totalCours,
+                    'pourcentage' => (($totalCours / $discip->getQuantumHoraire()) * 100)
+                ];
             }
-            $data[] = [
-                'id' => $discip->getId(),
-                'discipline' => $discip->getLibelleDis(),
-                'coefDiscip' => $discip->getCoefDis(),
-                'quantumHoraire' => $discip->getQuantumHoraire(),
-                'totalHoraire' => $totalCours
-            ];
+            $datas['classe'] = $classe;
+            $datas['disciplines'] = $data;
+            $donnees[] = $datas;
         }
+        
+        return $this->json($donnees, 201);
 
-        return $this->json($data, 201);
     }
+
+
 }

@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Eleve;
 use App\Entity\Classe;
 use App\Entity\Inscription;
-use App\Repository\EleveRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +22,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class EleveController extends AbstractController
 {
-     private $tokenStorage;
+    private $tokenStorage;
     public function __construct(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;

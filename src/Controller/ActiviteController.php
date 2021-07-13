@@ -3,16 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Activite;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
+
 use App\Repository\ActiviteRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 /**
  * @Route("/api", name="api_")
@@ -69,8 +70,8 @@ class ActiviteController extends AbstractController
         
     }
     /**
- * @Route("/activiter/ajout", name="ajout", methods={"POST"})
- */
+     * @Route("/activiter/ajout", name="ajout", methods={"POST"})
+     */
 public function addActiviter(Request $request, EntityManagerInterface $entityManager) 
 {
     $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
@@ -165,5 +166,140 @@ public function removeArticle($id , Request $request ,EntityManagerInterface $en
     return new Response('ok');
 }
 
+     /**
+     * @Route("/activite/CantineEntrant", name="CantineEntrant" , methods={"GET"})
+     */
+            
+    public function getCantineEntrant(ActiviteRepository $activiteRepository)
+    { 
+        $activites=  $activiteRepository->findBy(array( 'libelleAct'=>'Cantine','typeAct'=>'Entrant'));
+        foreach($activites as  $activite){
+            $data[]= [
+                'id'=> $activite->getId(),
+                'libelleAct' =>  $activite->getLibelleAct(),
+                'natureAct' => $activite->getNatureAct(),
+                'typeAct' => $activite->getTypeAct(),
+                'montant' => $activite->getMontant(),
+                    ];
+            }
+        
+       
+                return new JsonResponse($data, 201); 
+    }
+ /**
+   * @Route("/Activite/Cantinesortie", name="CantineSortie" , methods={"GET"})
+   */
+            
+    public function getCantineSortie(ActiviteRepository $activiteRepository)
+    { 
+        $activites=  $activiteRepository->findBy(array('libelleAct'=>'Cantine','typeAct'=>'Sortie'));
+        foreach($activites as  $activite){
+            $data[]= [
+                'id'=> $activite->getId(),
+                'libelleAct' =>  $activite->getLibelleAct(),
+                'natureAct' => $activite->getNatureAct(),
+                'typeAct' => $activite->getTypeAct(),
+                'montant' => $activite->getMontant(),
+                    ];
+            }
+        
+       
+                return new JsonResponse($data, 201); 
+    }
+       /**
+     * @Route("/activite/TransportEntrant", name="TransportEntrant" , methods={"GET"})
+     */
+            
+    public function getTransportEntrant(ActiviteRepository $activiteRepository)
+    { 
+        $activites=  $activiteRepository->findBy(array( 'libelleAct'=>'Transport','typeAct'=>'Entrant'));
+        foreach($activites as  $activite){
+            $data[]= [
+                'id'=> $activite->getId(),
+                'libelleAct' =>  $activite->getLibelleAct(),
+                'natureAct' => $activite->getNatureAct(),
+                'typeAct' => $activite->getTypeAct(),
+                'montant' => $activite->getMontant(),
+                    ];
+            }
+        
+       
+                return new JsonResponse($data, 201); 
+    }
+     /**
+   * @Route("/Activite/Transportsortie", name="TransportSortie" , methods={"GET"})
+   */
+            
+  public function getTransportSortie(ActiviteRepository $activiteRepository)
+  { 
+      $activites=  $activiteRepository->findBy(array('libelleAct'=>'Transport','typeAct'=>'Sortie'));
+      foreach($activites as  $activite){
+          $data[]= [
+              'id'=> $activite->getId(),
+              'libelleAct' =>  $activite->getLibelleAct(),
+              'natureAct' => $activite->getNatureAct(),
+              'typeAct' => $activite->getTypeAct(),
+              'montant' => $activite->getMontant(),
+                  ];
+          }
+      
+     
+              return new JsonResponse($data, 201); 
+  }
+   /**
+   * @Route("/Activite/MontantCantine", name="MontantCantine" , methods={"GET"})
+   */
+  public function getMontantCantine(ActiviteRepository $activiteRepository)
+    {    
+        $sommeCantineEntrant =0;
+        $sommeCantineSortie = 0;
+        $montantCantine = 0;
+        $activites=  $activiteRepository->findBy(array('libelleAct'=> 'Cantine'));
+       
+        foreach($activites as  $activite){
+            if( $activite->getTypeAct() == "Entrant"){
+                $sommeCantineEntrant += $activite->getMontant();
+            }else{
+                $sommeCantineSortie += $activite->getMontant();  
+            }
+        }
 
+        $montantCantine= ($sommeCantineEntrant-$sommeCantineSortie);
+
+
+        $data = [
+            'entrant' => $sommeCantineEntrant,
+            'sortie' => $sommeCantineSortie,
+            'montant' => $montantCantine,
+        ];
+        return $this->json($data, 201);
+    }
+     /**
+   * @Route("/Activite/MontantTransport", name="MontantTransport" , methods={"GET"})
+   */
+  public function getMontantTransport(ActiviteRepository $activiteRepository)
+  {    
+      $sommeTransportEntrant =0;
+      $sommeTransportSortie = 0;
+      $montantTransport = 0;
+      $activites=  $activiteRepository->findBy(array('libelleAct'=> 'Transport'));
+     
+      foreach($activites as  $activite){
+          if( $activite->getTypeAct() == "Entrant"){
+              $sommeTransportEntrant += $activite->getMontant();
+          }else{
+              $sommeTransportSortie += $activite->getMontant();  
+          }
+      }
+
+      $montantTransport= ($sommeTransportEntrant-$sommeTransportSortie);
+
+
+      $data = [
+          'entrant' => $sommeTransportEntrant,
+          'sortie' => $sommeTransportSortie,
+          'montant' => $montantTransport,
+      ];
+      return $this->json($data, 201);
+  }
 }

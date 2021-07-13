@@ -23,16 +23,19 @@ class EvenementController extends AbstractController
     public function getEvenementFuture(EvenementRepository $repo)
     {
         $evenements = $repo->findAll();
-        
+        $data = [];
         foreach($evenements as $evenement){
-            $data[] = [
-                'id' => $evenement->getId(),
-                'typeEvent' => $evenement->getTypeEven(),
-                'libelleEvent' => $evenement->getLibelleEven(),
-                'descriptionEvent' => $evenement->getDescriptionEven(),
-                'dateDebut' => $evenement->getDate()->getDateDebut(),
-                'dateFin' => $evenement->getDate()->getDateFin(),
-            ];
+            $dateEvent = $evenement->getDate()->getDateFin()->format('Y-m-d');
+            // if($dateEvent >= Date('Y-m-d')){
+                $data[] = [
+                    'id' => $evenement->getId(),
+                    'typeEvent' => $evenement->getTypeEven(),
+                    'libelleEvent' => $evenement->getLibelleEven(),
+                    'descriptionEvent' => $evenement->getDescriptionEven(),
+                    'dateDebut' => $evenement->getDate()->getDateDebut()->format('Y-m-d H:m:s'),
+                    'dateFin' => $evenement->getDate()->getDateFin()->format('Y-m-d H:m:s'),
+                ];
+            // }
         }
 
         return $this->json($data, 201);
@@ -135,10 +138,12 @@ class EvenementController extends AbstractController
                 'typeEven' => $events->getTypeEven(),
                 'libelleEven' => $events->getLibelleEven(),
                 'descriptionEven' => $events->getDescriptionEven(),
-                'date' => $events->getDate(),
-           ];
+                'dateDebut' => $events->getDate()->dateDebut()->format('Y-m-d'),
+                'dateFin' => $events->getDate()->dateFin()->format('Y-m-d'),
+            ];
         }
 
         return $this->json($data, 201); 
     }
+    
 }

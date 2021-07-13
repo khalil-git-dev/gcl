@@ -8,3 +8,10 @@ login_check:
 swagger_ui:
     path: /docs
     controller: api_platform.swagger.action.ui
+apport_get_entrant:
+    path: /apports/apportEntrant
+    methods: ['GET']
+    defaults:
+        _controller: App\Controllerr::ApportEntrant
+        _api_resource_class: App\Entity\Apport
+        _api_collection_operation_name: apport_get_entrant

@@ -4,10 +4,12 @@ namespace App\Entity;
 
 use App\Repository\MaterielRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ *  @ApiResource()
  * @ORM\Entity(repositoryClass=MaterielRepository::class)
  */
 class Materiel
@@ -33,6 +35,11 @@ class Materiel
      * @ORM\ManyToMany(targetEntity=Salle::class, inversedBy="materiels")
      */
     private $salle;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $nombre;
 
     public function __construct()
     {
@@ -88,6 +95,18 @@ class Materiel
     public function removeSalle(Salle $salle): self
     {
         $this->salle->removeElement($salle);
+
+        return $this;
+    }
+
+    public function getNombre(): ?int
+    {
+        return $this->nombre;
+    }
+
+    public function setNombre(int $nombre): self
+    {
+        $this->nombre = $nombre;
 
         return $this;
     }

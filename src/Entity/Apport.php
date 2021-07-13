@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Entity;
-
-use App\Repository\ApportRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
- * @ORM\Entity(repositoryClass=ApportRepository::class)
+ * @ApiResource()
+ * @ORM\Entity
  */
 class Apport
 {

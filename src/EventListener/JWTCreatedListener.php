@@ -45,10 +45,11 @@ class JWTCreatedListener
             throw new  CustomUserMessageAuthenticationException('Votre compte a été bloqué veuillez appoché votre administrateur');
         }
         // merge with existing event data
-            $payload = array_merge(
+        $payload = array_merge(
             $event->getData(),
             [
-                'id' => $user->getId()
+                'id' => $user->getId(),
+                'roles' => $user->getRoles(),
             ]
         );
 

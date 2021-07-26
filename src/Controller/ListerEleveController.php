@@ -38,25 +38,20 @@ class ListerEleveController extends AbstractController
                   
                     $data[]=[
                         'libelle'=>$libelleClass,
-                       'nom'=>$eleve->getNomEle(),
-                       'prenom'=>$eleve->getPrenomEle(),
+                        'nom'=>$eleve->getNomEle(),
+                        'prenom'=>$eleve->getPrenomEle(),
                         'dateDeNaiss'=>$eleve->getDateNaissEle(),
                         'lieuDeNaiss'=>$eleve->getLieuNaissEle(),
                         'nationalite'=>$eleve->getNationaliteElev(),
                         'sexe'=>$eleve->getSexeEle(),
                         'adress'=>$eleve->getAdresseEle(),
                         'nomPere'=>$eleve->getNomCompletPere(),
-                         'nomTuteur'=>$eleve->getNomCompletTuteurLeg(),
-                    ];
-
-               
-                            
-                 }
+                        'nomTuteur'=>$eleve->getNomCompletTuteurLeg(),
+                    ];              
+                }
                 if(count($data) == $length){
-                $datas[] =$eleve;
-
-            }
-               // dd($class); 
+                    $datas[] =$eleve;
+                }
             }
             return $this->json($data, 200);          
         }   

@@ -92,7 +92,8 @@ class NoteController extends AbstractController
         $data['libelleEval'] = $evaluation->getLibelleEval();
         $data['details'] = $evaluation->getDetailEval();
         $data['discipline'] = $evaluation->getDiscipline()->getLibelleDis();
-        $data['date'] = $evaluation->getDate()->getDateDebut()->format('Y-m-d');
+        $data['dateDebut'] = $evaluation->getDate()->getDateDebut()->format('Y-m-d');
+        $data['dateFin'] = $evaluation->getDate()->getDateFin()->format('Y-m-d');
         #####   recuperation des eleves et leurs notes   #####
         foreach($evaluation->getEleve() as $key => $eleve){
             $tabEleves[] = [
@@ -116,7 +117,7 @@ class NoteController extends AbstractController
                 "noteEvaluation" => $evaluation->getNote()[$key]->getValeurNot()
             ];
         }
-        $data["eleves"] =$tabEleves;
+        $data["eleves"] = $tabEleves;
         return new JsonResponse($data, 201);
     }
 

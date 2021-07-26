@@ -7,11 +7,18 @@ use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class StatusController extends AbstractController
 {
+    private $tokenStorage;
+    public function __construct(TokenStorageInterface $tokenStorage)
+    {
+        $this->tokenStorage = $tokenStorage;
+    }
+
     /**
-     * @Route("/api/changeStatus/{id}", name="changeStatus", methods={"PUT"})
+     * @Route("/api/changeStatus/{id}", name="changeStatus", methods={"GET"})
      */
     public function changeStatus($id, UserRepository $repoUser, EleveRepository $repoEleve)
     {

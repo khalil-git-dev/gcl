@@ -56,7 +56,7 @@ class BulletinController extends AbstractController
         $reposEval = $this->getDoctrine()->getRepository(Evaluation::class);
         $reposEleve = $this->getDoctrine()->getRepository(Eleve::class);
         $eleve = $reposEleve->find($values->idEleve);
-        $donneeBulletinEleve =[
+        $eleveInfos =[
             "matricule" => $eleve->getMatricule(),
             "nom" => $eleve->getNomEle(),
             "prenom" => $eleve->getPrenomEle(),
@@ -114,13 +114,13 @@ class BulletinController extends AbstractController
                 $tabNotes =[];
             }
             if($eleve->getId() == $values->idEleve){  
-                $donneeBulletinEleve['disciplineNote'] = $data;
-                $donneeBulletinEleve['sommesNotesCoef'] = $sommesNotesCoef;
+                $eleveInfos['disciplineNote'] = $data;
+                $eleveInfos['sommesNotesCoef'] = $sommesNotesCoef;
             }
 
             // Calcule de la moyenne en arrondi avec deux chiffre apres la virgule
             $moyenne = round(($sommesNotesCoef / $sommeCoef), 2);
-            $donneeBulletinEleve['sommeCoef'] = $sommeCoef;
+            $eleveInfos['sommeCoef'] = $sommeCoef;
             //Recuperation de la moyenne de l'eleve
             $tableauEleve[] = [
                 "eleveId" => $eleve->getId(),
@@ -138,10 +138,10 @@ class BulletinController extends AbstractController
         // Ajoute $tableauEleve en tant que dernier paramètre, pour trier par la clé commune
         array_multisort($rang, SORT_DESC, $tableauEleve);
         //Savoir la position (Rang) de l'eleve dans le tableau de moyenne.
-        $donneeBulletinEleve['rang'] = $getter->getRangEleve($tableauEleve, $values->idEleve);
+        $eleveInfos['rang'] = $getter->getRangEleve($tableauEleve, $values->idEleve);
         
-        // $pdf->generedBulletin($donneeBulletinEleve);
-        return new JsonResponse($donneeBulletinEleve, 201);
+        // $pdf->generedBulletin($eleveInfos);
+        return new JsonResponse($eleveInfos, 201);
     }
 
     /**
@@ -196,7 +196,7 @@ class BulletinController extends AbstractController
             }
             // Calcule de la moyenne en arrondi avec deux chiffre apres la virgule
             $moyenne = round(($sommesNotesCoef / $sommeCoef), 2);
-            $donneeBulletinEleve['sommeCoef'] = $sommeCoef;
+            $eleveInfos['sommeCoef'] = $sommeCoef;
             //Recuperation de la moyenne de l'eleve
             $tableauEleve[] = [
                 "eleveId" => $eleve->getId(),
@@ -222,5 +222,85 @@ class BulletinController extends AbstractController
 
     }
 
+    /**
+     * @Route("/visualiserNotesEleveParSemestre", name="visualiserNotesEleveParSemestre", methods={"POST"})
+     */
+    public function visualiserNotesEleveParSemestre(Request $request, EntityManagerInterface $entityManager, GetteurController $getter, PdfController $pdf)
+    {
+        $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
+        if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_CENSEUR" || $rolesUser == "ROLE_FORMATEUR")) {
+            $data = [
+                'status' => 401,
+                'message' => 'Vous n\'avez pas les droits pour effectuer cette operation'
+            ];
+            return new JsonResponse($data, 401);
+        }
+        
+        $values = json_decode($request->getContent());
+        $reposEval = $this->getDoctrine()->getRepository(Evaluation::class);
+        $classe = $this->getDoctrine()->getRepository(Classe::class)->find($values->idClasse);
+        $discip = $this->getDoctrine()->getRepository(Discipline::class)->find($values->idDiscipline);
+
+        $tabNotes =[];
+        $tableauEleve['idDiscipline'] = $discip->getId();
+        $tableauEleve['discipline'] = $discip->getLibelleDis();
+        $tableauEleve['coefDiscipline'] = $discip->getCoefDis();
+                
+        foreach($classe->getEleve() as $eleve){
+            $eleveInfos = [
+                "id" => $eleve->getId(),
+                "matricule" => $eleve->getMatricule(),
+                "nom" => $eleve->getNomEle(),
+                "prenom" => $eleve->getPrenomEle(),
+                "classe" => $eleve->getClasse()->getLibelleCl(),
+                "nbEleve" => count($eleve->getClasse()->getEleve()),
+                "dateNaissance" => $eleve->getDateNaissEle()->format('Y-m-d'),
+                "lieuNaissance" => $eleve->getLieuNaissEle(),
+            ];
+            $tabNotes =[];
+            $sommesNotesCoef = 0;
+                $evaluations = $reposEval->findEvaluationSemestreByDiscipline($values->semestre, $discip);
+                $sommeDevoire = 0; $noteSemestriel= 0;
+                $noteComposition = 0; $noteControlContinue = 0;
+
+                if($evaluations){
+                    $nbDevoir = 0;
+                    foreach($evaluations as $key => $evaluation){
+                        foreach($evaluation->getNote() as $key => $note){
+                            // Si le note appartient a l'eleve
+                            if($note->getBulletin() == $eleve->getBulletins()[0]){
+                                if($evaluation->getTypeEvel() == "Devoir"){
+                                    $nbDevoir ++;
+                                    // La somme des devoirs
+                                    $tabNotes[] =  $note->getValeurNot();
+                                    $sommeDevoire += $note->getValeurNot();
+                                }else if($evaluation->getTypeEvel() == "Composition"){
+                                    $noteComposition = $note->getValeurNot();
+                                }
+                            }
+                        }
+                    }
+                    //Calcule du cumuls des devoirs divisé par nombre de devoir
+                    if($nbDevoir <= 1){
+                        $noteControlContinue = ($sommeDevoire / 1);
+                    }else{
+                        $noteControlContinue = ($sommeDevoire / $nbDevoir);
+                    }
+                    $noteSemestriel = ($noteControlContinue + $noteComposition) / 2;
+                }
+                $eleveInfos['devoirs'] = $tabNotes;
+                $eleveInfos['noteCC'] = round($noteControlContinue, 2); // arrondis
+                $eleveInfos['noteCompo'] = $noteComposition;
+                $eleveInfos['noteSemestre'] = round($noteSemestriel, 2); // arrondit
+
+            $tableau[] = $eleveInfos;
+        }
+        $tableauEleve["eleves"] = $tableau;
+
+
+        return new JsonResponse($tableauEleve, 201);
+    }
+
     
+
 }

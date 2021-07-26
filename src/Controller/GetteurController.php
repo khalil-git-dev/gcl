@@ -102,4 +102,6 @@ class GetteurController extends AbstractController
       return($montantGlobal);
   }
 
+  
+
 }

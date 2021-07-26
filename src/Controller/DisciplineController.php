@@ -25,6 +25,28 @@ class DisciplineController extends AbstractController
     }
 
     /**
+     * @Route("/listDisciplineByFormateur/{idFormateur}", name="listDisciplineByFormateur" , methods={"GET"})
+     */
+    public function listDisciplineByFormateur($idFormateur, CoursRepository $coursRepo)
+    {
+        $data = [];
+        $allCours = $coursRepo->findCoursByFormateur($idFormateur);
+        if($allCours){
+            foreach($allCours as $cour){
+                if($cour->getFormateur()->getId() == $idFormateur){           
+                    $data[] = [
+                        "id" => $cour->getDiscipline()->getId(),
+                        "libelleDis" => $cour->getDiscipline()->getLibelleDis(),
+                        "coefDis" => $cour->getDiscipline()->getCoefDis(),
+                    ];
+                }
+            }
+        }
+        // Supprimer les doublons avant de retourner
+        return $this->json(array_unique($data, SORT_REGULAR), 201); 
+    }
+
+    /**
      * @Route("/getAllDiscipline", name="getAllDiscipline", methods={"GET"})
      */
     public function getAllDiscipline(DisciplineRepository $repo)
@@ -37,7 +59,7 @@ class DisciplineController extends AbstractController
             ];
             return new JsonResponse($data, 401);
         }
-        
+        $data = [];
         $disciplines = $repo->findAll();
         foreach($disciplines as $discip){
             $data[] = [
@@ -56,6 +78,7 @@ class DisciplineController extends AbstractController
     public function getProgressCours(GetteurController $getter, ClasseRepository $classeRepo,
         EntityManagerInterface $entityManager, DisciplineRepository $repoDiscipline)
     {
+        $donnees = [];
         $datas = [];
         $allClasses = $classeRepo->findAll();
         foreach($allClasses as $cl){
@@ -85,7 +108,6 @@ class DisciplineController extends AbstractController
         }
         
         return $this->json($donnees, 201);
-
     }
 
 

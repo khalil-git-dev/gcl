@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Entity\Censeur;
 use App\Entity\Formateur;
 use App\Entity\Intendant;
+use App\Entity\AgentSoins;
 use App\Entity\ServiceMedicale;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -356,11 +357,92 @@ class UserController extends AbstractController
        $data = [
         'status' => 201,
         'message' => "Utilisateur $message avec succes"
-    ];
+        ];
         return new JsonResponse($data, 201);
     }
 
-
+    /**
+     * @Route("/getListeUser", name="getListeUser", methods={"GET"})
+     */
+    public function getListeUser(EntityManagerInterface $entityManager)
+    {
+        $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
+        if (!($rolesUser == "ROLE_SUP_ADMIN" || $rolesUser == "ROLE_PROVISEUR")) {
+            $data = [
+                'status' => 401,
+                'message' => 'Vous n\'avez pas les droits pour effectuer cette operation'
+            ];
+            return new JsonResponse($data, 401);
+        }
+        $allSurveillants = $this->getDoctrine()->getRepository(Surveillant::class)->findAll();
+        $allFormatateurs = $this->getDoctrine()->getRepository(Formateur::class)->findAll();
+        $allIntendants = $this->getDoctrine()->getRepository(Intendant::class)->findAll();
+        $allCenseurs = $this->getDoctrine()->getRepository(Censeur::class)->findAll();
+        $allAgentSoins = $this->getDoctrine()->getRepository(AgentSoins::class)->findAll();
+        $allUsers = [];
+        
+        // Surveillants
+        foreach($allSurveillants as $surveillant){
+            $typeUser  = ucfirst(strtolower(substr($surveillant->getUser()->getRoles()[0], 5, strlen($surveillant->getUser()->getRoles()[0]))));
+            $allUsers[] = [
+                "id" =>  $surveillant->getId(),
+                "type" => $typeUser,
+                "prenom" => $surveillant->getPrenomSur(),
+                "nom" => $surveillant->getNomSur(),
+                "email" => $surveillant->getEmailSur(),
+                "login" => $surveillant->getUser()->getUsername(),
+            ];
+        }
+        // Intandant
+        foreach($allIntendants as $intendant){
+            $typeUser  = ucfirst(strtolower(substr($intendant->getUser()->getRoles()[0], 5, strlen($intendant->getUser()->getRoles()[0]))));
+            $allUsers[] = [
+                "id" =>  $intendant->getId(),
+                "type" => $typeUser,
+                "prenom" => $intendant->getPrenomInt(),
+                "nom" => $intendant->getNomInt(),
+                "email" => $intendant->getEmailInt(),
+                "login" => $intendant->getUser()->getUsername(),
+            ];
+        }
+        // Formateurs
+        foreach($allFormatateurs as $formateur){
+            $typeUser  = ucfirst(strtolower(substr($formateur->getUser()->getRoles()[0], 5, strlen($formateur->getUser()->getRoles()[0]))));
+            $allUsers[] = [
+                "id" =>  $formateur->getId(),
+                "type" => $typeUser,
+                "prenom" => $formateur->getPrenomFor(),
+                "nom" => $formateur->getNomFor(),
+                "email" =>$formateur->getEmailFor(),
+                "login" => $formateur->getUser()->getUsername(),
+            ];
+        }
+        // Censeurs
+        foreach($allCenseurs as $censeur){
+            $typeUser  = ucfirst(strtolower(substr($censeur->getUser()->getRoles()[0], 5, strlen($censeur->getUser()->getRoles()[0]))));
+            $allUsers[] = [
+                "id" =>  $censeur->getId(),
+                "type" => $typeUser,
+                "prenom" => $censeur->getPrenomCen(),
+                "nom" => $censeur->getNomCen(),
+                "email" => $censeur->getEmail(),
+                "login" => $censeur->getUser()->getUsername(),
+            ];
+        }
+        // Agent de soins
+        foreach($allAgentSoins as $agent){
+            $typeUser  = ucfirst(strtolower(substr($agent->getUser()->getRoles()[0], 5, strlen($agent->getUser()->getRoles()[0]))));
+            $allUsers[] = [
+                "id" =>  $agent->getId(),
+                "type" => $typeUser,
+                "prenom" => $agent->getNomCompletAgent(),
+                "email" => $agent->getEmail(),
+                "login" => $agent->getUser()->getUsername(),
+            ];
+        }
+        
+        return new JsonResponse($allUsers, 201);        
+    }
     
     // Generation de password alternative pour la premiere connexion user
     public function passwordGenered($length)

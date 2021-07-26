@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\UserRepository;
 use App\Repository\ClasseRepository;
 use App\Repository\CoursRepository;
+use App\Controller\GetteurController;
 use App\Repository\SurveillantRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -60,7 +61,6 @@ class ClasseController extends AbstractController
         }
         // Supprimer les doublons avant de retourner
         return $this->json(array_unique($data, SORT_REGULAR), 201); 
-
     }
 
     /**
@@ -162,6 +162,87 @@ class ClasseController extends AbstractController
         // Supprimer les doublons avant de retourner
         return $this->json(array_unique($data, SORT_REGULAR), 201); 
 
+    }
+
+    /**
+     * @Route("/getAllInfosByClasse/{idClasse}", name="getAllInfosByClasse" , methods={"GET"})
+     */
+    public function getAllInfosByClasse($idClasse, ClasseRepository $classeRepo, CoursRepository $coursRepo, GetteurController $getter)
+    {
+        $eleves = []; $datas =[]; $formateurs =[]; $surveillants =[]; 
+        $classe = $classeRepo->find($idClasse);
+        $datas['classe'] = $classe->getLibelleCl();
+        if($classe){
+            // Liste des eleves de la classe
+            foreach($classe->getEleve() as $eleve){
+                $eleves[]=[
+                    "id" => $eleve->getId(),
+                    "matricule" => $eleve->getMatricule(),
+                    "nom" => $eleve->getNomEle(),
+                    "prenom" => $eleve->getPrenomEle(),
+                    "dateNaissance" => $eleve->getDateNaissEle()->format('Y-m-d'),
+                    "lieuNaissance" => $eleve->getLieuNaissEle(),
+                    "sexe" => $eleve->getSexeEle(),
+                    "religion" => $eleve->getReligionEle(),
+                    "nationalite" => $eleve->getNationaliteElev(),
+                    "adresse" => $eleve->getAdresseEle(),
+                    "nomPere" => $eleve->getNomCompletPere(),
+                    "nomMere" => $eleve->getNomCompletMere(),
+                    "nomTuteur" => $eleve->getNomCompletTuteurLeg(),
+                    "telPere" => $eleve->getTelPere(),
+                    "telMere" => $eleve->getTelMere(),
+                    "telTuteur" => $eleve->getTelTuteurLeg(),
+                ];
+            }
+            $datas['eleves'] = $eleves;
+        }
+        // Liste des formateurs de la classe
+        $formateurs = [];
+        $allCours = $coursRepo->findAll();
+        if($allCours){
+            foreach($allCours as $cours){
+                foreach($cours->getClasse() as $Classe){            
+                    if($Classe->getId() == $idClasse){
+                        $formateurs[] = [
+                            "id" => $cours->getFormateur()->getId(),
+                            "nom" => $cours->getFormateur()->getNomFor(),
+                            "prenom" => $cours->getFormateur()->getPrenomFor(),
+                            "type" => $cours->getFormateur()->getTypeFor(),
+                            "email" => $cours->getFormateur()->getEmailFor(),
+                            "matieres" => $cours->getFormateur()->getMatieres(),
+                            "telephone" => $cours->getFormateur()->getTelFor(),
+                        ];
+                    }
+                }
+            }
+            $datas['formateurs'] = array_unique($formateurs, SORT_REGULAR);
+        }
+        // Liste des surveillants de la classe
+        // $myclasse = $classeRepo->find($classeId);
+        foreach($classe->getSurveillants() as $surveillant){
+            $surveillants[]=[
+                'id' => $surveillant->getId(),
+                'prenom' => $surveillant->getPrenomSur(),
+                'nom' => $surveillant->getNomSur(),
+                'email' => $surveillant->getEmailSur(),
+                'typeSurv' => $surveillant->getTypeSur(),
+            ];
+        }
+        $datas['surveillants'] = array_unique($surveillants, SORT_REGULAR); 
+        
+        // Liste des disciplines faites dans cette classe
+        $disciplinesCl = [];
+        $disciplines = $getter->getDisciplinesClasse($idClasse);
+        foreach($disciplines as $discip){
+            $disciplinesCl[] = [
+                "id" => $discip->getId(),
+                "libelle" => $discip->getLibelleDis(),
+                "coef" => $discip->getCoefDis(),
+            ];
+        }
+        $datas['disciplines'] = $disciplinesCl;
+
+        return $this->json($datas, 201); 
     }
 
     

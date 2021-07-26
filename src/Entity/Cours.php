@@ -177,20 +177,14 @@ class Cours
         return $this;
     }
 
-    /**
-     * @return Collection|Assister[]
-     */
-    public function getAssisters(): Collection
+    public function getDateCours(): ?Date
     {
-        return $this->assisters;
+        return $this->dateCours;
     }
 
-    public function addAssister(Assister $assister): self
+    public function setDateCours(?Date $dateCours): self
     {
-        if (!$this->assisters->contains($assister)) {
-            $this->assisters[] = $assister;
-            $assister->setCours($this);
-        }
+        $this->dateCours = $dateCours;
 
         return $this;
     }

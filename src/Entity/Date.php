@@ -61,6 +61,11 @@ class Date
      */
     private $factures;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Cours::class, mappedBy="dateCours")
+     */
+    private $cours;
+
     
     public function __construct()
     {
@@ -257,6 +262,36 @@ class Date
             // set the owning side to null (unless already changed)
             if ($facture->getDate() === $this) {
                 $facture->setDate(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Cours[]
+     */
+    public function getCours(): Collection
+    {
+        return $this->cours;
+    }
+
+    public function addCour(Cours $cour): self
+    {
+        if (!$this->cours->contains($cour)) {
+            $this->cours[] = $cour;
+            $cour->setDateCours($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCour(Cours $cour): self
+    {
+        if ($this->cours->removeElement($cour)) {
+            // set the owning side to null (unless already changed)
+            if ($cour->getDateCours() === $this) {
+                $cour->setDateCours(null);
             }
         }
 

@@ -67,6 +67,11 @@ class Formateur
      */
     private $notes;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $heurSupplementaire;
+
     public function __construct()
     {
         $this->cours = new ArrayCollection();
@@ -218,6 +223,18 @@ class Formateur
                 $note->setFormateur(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getHeurSupplementaire(): ?float
+    {
+        return $this->heurSupplementaire;
+    }
+
+    public function setHeurSupplementaire(?float $heurSupplementaire): self
+    {
+        $this->heurSupplementaire = $heurSupplementaire;
 
         return $this;
     }

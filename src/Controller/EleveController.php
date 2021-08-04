@@ -9,13 +9,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\EleveRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @Route("/api")
@@ -248,6 +246,7 @@ class EleveController extends AbstractController
                         "telMere" => $eleve->getTelMere(),
                         "telTuteur" => $eleve->getTelTuteurLeg(),
                         "classe" => $eleve->getClasse()->getLibelleCl(),
+                        "serie" => $eleve->getClasse()->getSerie()->getLibelleSer(),
                         "niveau" => $eleve->getNiveau()->getLibelleNiv()
                     ];
                 }
@@ -294,6 +293,7 @@ class EleveController extends AbstractController
                 "telTuteur" => $eleve->getTelTuteurLeg(),
                 "classe" => $eleve->getClasse()->getLibelleCl(),
                 "niveau" => $eleve->getNiveau()->getLibelleNiv(),
+                "serie" => $eleve->getClasse()->getSerie()->getLibelleSer(),
                 "etat" => $eleve->getEtatEle(),
                 "detailEl" => $eleve->getDetailEle()
             ];
@@ -339,6 +339,7 @@ class EleveController extends AbstractController
                 "telEleve" => $eleve->getTelEle(),
                 "telTuteur" => $eleve->getTelTuteurLeg(),
                 "classe" => $eleve->getClasse()->getLibelleCl(),
+                "serie" => $eleve->getClasse()->getSerie()->getLibelleSer(),
                 "idClasse" => $eleve->getClasse()->getId(),
                 "niveau" => $eleve->getNiveau()->getLibelleNiv(),
                 "etat" => $eleve->getEtatEle(),

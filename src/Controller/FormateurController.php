@@ -28,6 +28,7 @@ class FormateurController extends AbstractController
      */
     public function getAllFormateur(FormateurRepository $formateurRepo){
         $data = [];
+        // dd("allFormateurs");
         $allFormateurs = $formateurRepo->findAll();
         if($allFormateurs){
             foreach($allFormateurs as $formateur){
@@ -43,5 +44,6 @@ class FormateurController extends AbstractController
         }
         return new JsonResponse($data, 201);
     }
+
 
 }

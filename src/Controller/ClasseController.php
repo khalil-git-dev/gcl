@@ -9,6 +9,8 @@ use App\Entity\Classe;
 use App\Entity\Surveillant;
 use App\Controller\ClasseController;
 use App\Repository\ClasseRepository;
+use App\Repository\CoursRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SurveillantRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,10 +27,86 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class ClasseController extends AbstractController
 {
     private $tokenStorage;
-    public function __construct(TokenStorageInterface $tokenStorage)
+    public function __construct(UserRepository $usersRepository, TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
+        $this->usersRepository = $usersRepository;
     }
+
+    /**
+     * @Route("/list_class", name="list_class" , methods={"GET"})
+     */
+    public function listClasse(ClasseRepository $classeRepo)
+    {
+        $classe = $classeRepo->findAll();
+        foreach($classe as $classes){
+            $data[] = [
+                'libelleCl' => $classes->getLibelleCl(),
+                'descriptionCl' => $classes->getDescriptionCl(),
+                'id' => $classes->getId(),
+                'nbMaxEleve' => $classes->getNbMaxEleve(),
+                'serie' => $classes->getSerie()->getLibelleSer()
+            ];
+        }
+        return new JsonResponse($data, 201);
+    }
+
+    /**
+     * @Route("/listClassesByFormateur/{idFormateur}", name="listClassesByFormateur" , methods={"GET"})
+     */
+    public function listClassesByFormateur($idFormateur, CoursRepository $coursRepo)
+    {
+        $data = [];
+        $allCours = $coursRepo->findCoursByFormateur($idFormateur);
+        if($allCours){
+            foreach($allCours as $cour){
+                foreach($cour->getClasse() as $classe){            
+                    $data[] = [
+                        "id" => $classe->getId(),
+                        "classe" => $classe->getLibelleCl(),
+                        "nbMaxEleve" => $classe->getNbMaxEleve(),
+                        "serie" => $classe->getSerie()->getLibelleSer(),
+                    ];
+                }
+            }
+        }
+        // Supprimer les doublons avant de retourner
+        return $this->json(array_unique($data, SORT_REGULAR), 201); 
+    }
+
+    /**
+     * @Route("/listEleveByClasse/{classeId}", name="listEleveByClasse" , methods={"GET"})
+     */
+    public function listEleveByClasse($classeId, ClasseRepository $classeRepo)
+    {
+        $data = [];
+        $classe = $classeRepo->find($classeId);
+        if($classe){
+            foreach($classe->getEleve() as $eleve){
+                $data[]=[
+                    "id" => $eleve->getId(),
+                    "nom" => $eleve->getNomEle(),
+                    "prenom" => $eleve->getPrenomEle(),
+                    "dateNaissance" => $eleve->getDateNaissEle()->format('Y-m-d'),
+                    "lieuNaissance" => $eleve->getLieuNaissEle(),
+                    "sexe" => $eleve->getSexeEle(),
+                    "religion" => $eleve->getReligionEle(),
+                    "nationalite" => $eleve->getNationaliteElev(),
+                    "adresse" => $eleve->getAdresseEle(),
+                    "nomPere" => $eleve->getNomCompletPere(),
+                    "nomMere" => $eleve->getNomCompletMere(),
+                    "nomTuteur" => $eleve->getNomCompletTuteurLeg(),
+                    "telPere" => $eleve->getTelPere(),
+                    "telMere" => $eleve->getTelMere(),
+                    "telTuteur" => $eleve->getTelTuteurLeg(),
+                    "classe" => $eleve->getClasse()->getLibelleCl(),
+                    "niveau" => $eleve->getNiveau()->getLibelleNiv()
+                ];
+            }
+        }
+        return $this->json($data, 201); 
+    }
+
     /**
      * @Route("/affectationClasse", name="affectationClasse", methods={"POST"})
      */
@@ -45,20 +123,19 @@ class ClasseController extends AbstractController
         //Affectation d'un surveillant a plusieurs classe
         $values = json_decode($request->getContent());
         $surveillant = $repoSurveillant->find($values->idSurveillant);
-         foreach($values->classes as $key => $value){
+        foreach($values->classes as $key => $value){
 
             $surveillant->addClasse($repoClass->find($value));
             $entityManager->persist($surveillant);
-
-         }
+        }
         
-          $entityManager->flush();
-    $data = [
-        'status' => 201,
-        'message' => "ajouter aec succes"
-    ];
-    return new JsonResponse($data, 201);   
-}
+            $entityManager->flush();
+            $data = [
+                'status' => 201,
+                'message' => "ajouter aec succes"
+            ];
+            return new JsonResponse($data, 201);   
+        }
      /**
      * @Route("/listClasseSurveillant/{id}", name="list", methods={"GET"})
      */

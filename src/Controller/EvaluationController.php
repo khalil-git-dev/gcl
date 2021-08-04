@@ -29,30 +29,29 @@ class EvaluationController extends AbstractController
         $this->tokenStorage = $tokenStorage;
     }
 
-     /**
-      * @Route("/getAllevaluation", name="getevaluation", methods={"GET"})
-      */
-      public function getEvaluation(EvaluationRepository $repoevaluetion)
-      {
-          $evaluation =  $repoevaluetion->findAll();
-          
-          foreach($evaluation as $evelu){
-              $data[] = [
-                  'id' => $evelu->getId(),
-                  'libelleEval' => $evelu->getLibelleEval(),
-                  'detailEval' => $evelu->getDetailEval(),
-                  'discipline' => $evelu->getDiscipline(),
-                  'dateDebut' => $evelu->getDate()->getDateDebut(),
-                  'dateFin' => $evelu->getDate()->getDateFin(),
-              ];
-          }
-  
-          return $this->json($data, 201);
-      }
-    
- /**
-  * @Route("/evaluation/ajout", name="ajout", methods={"POST"})
-  */
+    /**
+     * @Route("/getAllevaluation", name="getevaluation", methods={"GET"})
+     */
+    public function getEvaluation(EvaluationRepository $repoEvaluation)
+    {
+        $evaluations =  $repoEvaluation->findAll();
+        $data = [];
+        foreach($evaluations as $evalu){
+            $data[] = [
+                'id' => $evalu->getId(),
+                'libelleEval' => $evalu->getLibelleEval(),
+                'detailEval' => $evalu->getDetailEval(),
+                'discipline' => $evalu->getDiscipline()->getLibelleDis(),
+                'dateDebut' => $evalu->getDate()->getDateDebut()->format('Y-m-d'),
+                'dateFin' => $evalu->getDate()->getDateFin()->format('Y-m-d'),
+            ];
+        }
+        return $this->json($data, 201);
+    }
+        
+    /**
+     * @Route("/evaluation/ajout", name="ajout", methods={"POST"})
+     */
     public function addEvaluation(Request $request, EntityManagerInterface $entityManager )
     {
         $rolesUser = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
@@ -64,7 +63,7 @@ class EvaluationController extends AbstractController
             return new JsonResponse($data, 401);
         }
         // On décode les données envoyées
-         
+        
         $date =  new Date();
 
         $donnees = json_decode($request->getContent());
@@ -166,4 +165,44 @@ class EvaluationController extends AbstractController
         return new Response('ok', 201);
 
     }
+
+    /**
+     * @Route("/getElevesEvaluation/{id}", name="getElevesEvaluation", methods={"GET"})
+     */
+    public function getElevesEvaluation($id, EvaluationRepository $repoevaluetion)
+    {
+        $data = [];
+        $evaluation =  $repoevaluetion->find($id);
+        if($evaluation){
+            foreach($evaluation->getEleve() as $eleve){
+                $data[] = [
+                    "id" => $eleve->getId(),
+                    "matricule" => $eleve->getMatricule(),
+                    "nom" => $eleve->getNomEle(),
+                    "prenom" => $eleve->getPrenomEle(),
+                    "dateNaissance" => $eleve->getDateNaissEle()->format('Y-m-d'),
+                    "lieuNaissance" => $eleve->getLieuNaissEle(),
+                    "sexe" => $eleve->getSexeEle(),
+                    "religion" => $eleve->getReligionEle(),
+                    "nationalite" => $eleve->getNationaliteElev(),
+                    "adresse" => $eleve->getAdresseEle(),
+                    "nomPere" => $eleve->getNomCompletPere(),
+                    "nomMere" => $eleve->getNomCompletMere(),
+                    "nomTuteur" => $eleve->getNomCompletTuteurLeg(),
+                    "telEleve" => $eleve->getTelEle(),
+                    "telPere" => $eleve->getTelPere(),
+                    "telMere" => $eleve->getTelMere(),
+                    "telTuteur" => $eleve->getTelTuteurLeg(),
+                    "classe" => $eleve->getClasse()->getLibelleCl(),
+                    "niveau" => $eleve->getNiveau()->getLibelleNiv(),
+                    "serie" => $eleve->getClasse()->getSerie()->getLibelleSer(),
+                    "etat" => $eleve->getEtatEle(),
+                    "detailEl" => $eleve->getDetailEle()
+                ];
+            }
+        }
+
+        return $this->json($data, 201);
+    }
+
 }

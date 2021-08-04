@@ -42,7 +42,7 @@ class JWTCreatedListener
             //     'message' => "Votre compte a été bloqué veuillez appoché votre administrateur."
             // ];
             // return new JsonResponse($data, 201);
-            throw new  CustomUserMessageAuthenticationException('Votre compte a été bloqué veuillez appoché votre administrateur');
+            throw new  CustomUserMessageAuthenticationException('Votre compte a été bloqué veuillez rappoché de votre administrateur');
         }
         // merge with existing event data
         $payload = array_merge(
